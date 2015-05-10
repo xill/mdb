@@ -1,0 +1,31 @@
+#readerContainer
+{
+	position : relative;
+	overflow : hidden;
+	float : left;
+}
+
+#readerView
+{
+	position : relative;
+}
+
+#previousPage 
+{
+	position : absolute;
+	left : 0%;
+	top : 0%;
+	width : 50%;
+	height : 100%;
+	/*background-color : rgba(100,0,0,0.5);*/
+}
+
+#nextPage
+{
+	position : absolute;
+	left : 50%;
+	top : 0%;
+	width : 50%;
+	height : 100%;
+	/*background-color : rgba(0,100,0,0.5);*/
+}
