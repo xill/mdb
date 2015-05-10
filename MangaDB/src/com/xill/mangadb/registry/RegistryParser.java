@@ -1,12 +1,17 @@
 package com.xill.mangadb.registry;
 
 import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.FileReader;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Properties;
 
 import com.xill.mangadb.db.Chapter;
 import com.xill.mangadb.db.Page;
 import com.xill.mangadb.db.Series;
+import com.xill.mangadb.db.Tag;
 import com.xill.mangadb.util.Options;
 import com.xill.mangadb.util.StringUtil;
 
@@ -49,6 +54,28 @@ public class RegistryParser {
 			if(seriesFolder.isDirectory()) {
 				Series serie = new Series();
 				serie.setName(seriesFolder.getName());
+				
+				File serieProp = new File(registryLocation + File.separator + seriesName + File.separator + "series.properties");
+				if(serieProp.exists()) {
+					Properties prop = new Properties();
+					try {
+						prop.load(new FileReader(serieProp));
+						String rawTags = (String) prop.get("tags");
+						String[] tags = rawTags.split(",");
+						for( String tag : tags ) {
+							String tagName = tag.trim();
+							Tag tagObj = new Tag();
+							tagObj.setName(tagName);
+							serie.addTag(tagObj);
+						}
+						
+					} catch (FileNotFoundException e) {
+						e.printStackTrace();
+					} catch (IOException e) {
+						e.printStackTrace();
+					}
+				}
+				
 				String[] chapterListing = StringUtil.sort(seriesFolder.list());
 				for( String chapterName : chapterListing ) {
 					System.out.println(registryLocation + File.separator + seriesName + File.separator + chapterName);

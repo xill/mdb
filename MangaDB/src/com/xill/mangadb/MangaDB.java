@@ -16,6 +16,7 @@ import com.xill.mangadb.control.DatabaseControl;
 import com.xill.mangadb.control.DisableFileMappedBufferConfiguration;
 import com.xill.mangadb.control.X86DatabaseControl;
 import com.xill.mangadb.db.Series;
+import com.xill.mangadb.db.Tag;
 import com.xill.mangadb.registry.RegistryParser;
 import com.xill.mangadb.util.Options;
 
