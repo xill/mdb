@@ -1,6 +1,7 @@
 package com.xill.mangadb.control;
 
 import java.sql.SQLException;
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 
@@ -82,6 +83,57 @@ public abstract class DatabaseControl {
 				.queryForFirst();
 	}
 
+	public Series getSeriesById(int id) throws SQLException {
+		return seriesDao.queryBuilder().where().eq("id", id + "")
+				.queryForFirst();
+	}
+
+	public List<Series> getSeriesByTags(String... tags) throws SQLException {
+
+		List<Series> seriesList = new ArrayList<Series>();
+		if (tags.length > 0) {
+			List<Tag> tagList = getTagsByName(tags[0]);
+			List<Integer> seriesIds = new ArrayList<Integer>();
+			for (Tag t : tagList) {
+				int i = t.getRefId();
+				if (!seriesIds.contains(i))
+					seriesIds.add(i);
+			}
+
+			for (int i = 0; i < seriesIds.size(); ++i) {
+				int id = seriesIds.get(i);
+				Series s = getSeriesById(id);
+				System.out.println(id + " is " + ((s != null)?"not null":"null"));
+				
+				if(tags.length > 1) {
+					boolean valid = true;
+					List<Tag> sTags = new ArrayList<Tag>(s.getTags());
+					for( int f = 0; f < tags.length ; ++f ) {
+						boolean curValid = false;
+						String tagName = tags[f];
+						for(Tag g : sTags) {
+							if(g.getName().equals(tagName)) {
+								curValid = true;
+								break;
+							}
+						}
+						if(!curValid) {
+							valid = false;
+							break;
+						}
+					}
+					
+					if(valid) seriesList.add(s);
+				}
+				else {
+					seriesList.add(s);
+				}
+			}
+		}
+
+		return seriesList;
+	}
+
 	public void setSeries(Series dao) throws SQLException {
 		seriesDao.createOrUpdate(dao);
 
@@ -115,6 +167,14 @@ public abstract class DatabaseControl {
 
 	public void setPage(Page dao) throws SQLException {
 		pageDao.createOrUpdate(dao);
+	}
+
+	public List<Tag> getAllTags() throws SQLException {
+		return tagDao.queryForAll();
+	}
+
+	public List<Tag> getTagsByName(String name) throws SQLException {
+		return tagDao.queryBuilder().where().eq("name", name).query();
 	}
 
 	public Tag getTag(String id) throws SQLException {
