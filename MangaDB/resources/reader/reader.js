@@ -27,6 +27,9 @@ $.ajax({
 });
 
 $(document).ready(function(){
+	// set back button href
+	$("#backLink").attr("href","/chapters/?name="+seriesName)
+	
 	if(chapterData) showReader();
 });
 

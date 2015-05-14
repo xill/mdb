@@ -1,0 +1,60 @@
+* { margin : 0px; padding : 0px; }
+
+body {
+	font-family: "Helvetica Neue",Helvetica,Arial,sans-serif
+}
+
+.topBar {
+	height: 60px;
+	background-color: rgb(10,10,150);
+	color : white;
+	box-shadow: 0 4px 2px -2px gray;
+	width: 90%;
+	margin-left: 5%;
+	border-radius: 0px 0px 10px 10px;
+	margin-bottom: 20px;
+}
+
+.topBar #backLink {
+	position : absolute;
+}
+
+.linkContainer {
+	position: absolute;
+	left: 200px;
+}
+
+.topBar #backIcon {
+	width: 65px;
+	height: 50px;
+	position: absolute;
+	top: 0.5em;
+	left: 1.5em;
+}
+
+.topBar span {
+	font-size : 20px;
+	line-height : 60px;
+	margin-right : 10px;
+}
+
+.topBar a {
+	text-decoration: none;
+	position : relative;
+}
+
+.topBar a:link {
+    color: #FFF;
+}
+
+.topBar a:visited {
+    color: #FFF;
+}
+
+.topBar a:hover {
+    color: #FFF;
+}
+
+.topBar a:active {
+    color: #FFF;
+}
