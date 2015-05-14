@@ -61,7 +61,7 @@ function nextPage() {
 	}
 	
 	readerView.attr("src",buildPageUrl(pageIndex));
-	$(window).scrollTop(0);
+	scrollUp();
 	window.location.hash = "#"+pageIndex;
 }
 
@@ -77,8 +77,15 @@ function previousPage() {
 	}
 	
 	readerView.attr("src",buildPageUrl(pageIndex));
-	$(window).scrollTop(0);
+	scrollUp();
 	window.location.hash = "#"+pageIndex;
+}
+
+/**
+ * scroll up animation performed on page change.
+ */
+function scrollUp() {
+	$("html, body").animate({ scrollTop: "0px" });
 }
 
 function buildPageUrl( pageNumber ) {

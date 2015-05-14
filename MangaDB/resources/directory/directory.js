@@ -1,19 +1,27 @@
 
 // full data set.
 var dataSet = undefined;
-// full series data set.
-var seriesList = undefined;
+
+var SERIES_MODE = "/api/all";
+var TAGS_MODE = "/api/tags";
+var REGUEST_MODE = SERIES_MODE
+
+if(gup("mode")=="tags") {
+	REGUEST_MODE = TAGS_MODE;
+}
 
 // request to fetch full data set.
 $.ajax({
-	"url" : "/api/all",
+	"url" : REGUEST_MODE,
 	"dataType" : "json",
 	"success" : function(resp) {
 		console.log(resp);
 		dataSet = resp;
-		seriesList = dataSet.series;
 		
 		if(document.readyState == 'complete') showDirectory();
+	},
+	"error" : function(e) {
+		console.error(e);
 	}
 });
 
@@ -22,14 +30,21 @@ function showDirectory() {
 	// base directory element.
 	var grid = $(".gridParent");
 	
-	// all the series with first letter of the series name as key.
+	var data = undefined;
+	if(REGUEST_MODE == TAGS_MODE) {
+		data = dataSet.tags;
+	} else {
+		data = dataSet.series;
+	}
+	
+	// all the data with first letter of the data name as key.
 	var values = {};
-	for(var i = 0 ; i < seriesList.length; ++i) {
-		if(seriesList[i]) {
-			var k = seriesList[i][0];
+	for(var i = 0 ; i < data.length; ++i) {
+		if(data[i]) {
+			var k = data[i][0];
 			if(!values[k]) values[k] = [];
 			
-			values[k].push(seriesList[i]);
+			values[k].push(data[i]);
 		}
 	}
 	
@@ -48,7 +63,11 @@ function showDirectory() {
 		grid.append(subGrid);
 		subGrid.append('<b>'+keyName+'</b><br/>');
 		for(var f = 0 ; f < keyValue.length ; ++f) {
-			subGrid.append($('<div><a href="/chapters/?name='+keyValue[f]+'">'+keyValue[f]+'</a></div>'));
+			if(REGUEST_MODE == TAGS_MODE) {
+				subGrid.append($('<div><a href="/search/?tags='+keyValue[f]+'">'+keyValue[f]+'</a></div>'));
+			} else {
+				subGrid.append($('<div><a href="/chapters/?name='+keyValue[f]+'">'+keyValue[f]+'</a></div>'));
+			}
 		}
 	}
 }

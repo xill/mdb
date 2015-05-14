@@ -4,6 +4,7 @@ import java.io.IOException;
 import java.net.URLDecoder;
 import java.sql.SQLException;
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
 
 import javax.servlet.ServletException;
@@ -28,6 +29,7 @@ public class RequestHandler extends HttpServlet {
 	private final static String API_GET_ALL = API_KEY + "all";
 	private final static String API_GET_SERIES = API_KEY + "series";
 	private final static String API_GET_TAGS = API_KEY + "tags";
+	private final static String API_GET_SEARCH = API_KEY + "search";
 
 	// reader/
 
@@ -59,9 +61,61 @@ public class RequestHandler extends HttpServlet {
 				handleGetSeries(request, response, requestString);
 			else if (requestString.startsWith(API_GET_TAGS))
 				handleGetTags(request, response, requestString);
-
+			else if (requestString.startsWith(API_GET_SEARCH))
+				handleSearch(request, response);
 		}
 
+	}
+	
+	private void handleSearch(HttpServletRequest request,
+			HttpServletResponse response) throws ServletException, IOException {
+		String tags = request.getParameter("tags");
+		String name = request.getParameter("name");
+		
+		System.out.println("search");
+		System.out.println(tags);
+		System.out.println(name);
+		
+		String[] tagList = tags.split(",");
+		List<Series> s = null;
+		try {
+			s = DatabaseControl.get().getSeriesByTags(tagList);
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+		
+		// trim results.
+		if(name != null && name.length() > 0 && !name.equals("null")) {
+			Iterator<Series> it = s.iterator();
+			while(it.hasNext()) {
+				Series ns = it.next();
+				if(!ns.getName().contains(name)) {
+					it.remove();
+				}
+			}
+		}
+		
+		System.out.println(s);
+		if(s != null && s.size() > 0) {
+			StringBuilder builder = new StringBuilder();
+			builder.append("{");
+			builder.append("\"series\":[");
+			for (int i = 0; i < s.size(); ++i) {
+				if (i > 0)
+					builder.append(",");
+				if(s.get(i) == null) System.out.println(i + " is null");
+				builder.append("\"" + s.get(i).getName() + "\"");
+			}
+			builder.append("]");
+			builder.append("}");
+			response.getWriter().println(builder.toString());
+
+		} else {
+			response.getWriter().println("{}");
+		}
+
+		
+		
 	}
 
 	private void handleGetAll(HttpServletRequest request,
@@ -99,10 +153,10 @@ public class RequestHandler extends HttpServlet {
 		// /api/tags
 
 		// for specific
-		// /api/tags/Yuri
+		// /api/tags/Example1
 
 		// for combination
-		// /api/tags/Yuri+NSFW
+		// /api/tags/Example1+Example2
 		
 		String shortQuery = query.replace(API_GET_TAGS, "").replace("/", "").trim();
 		
@@ -133,7 +187,7 @@ public class RequestHandler extends HttpServlet {
 				builder.append("[");
 				for(int i = 0 ; i < tagNames.size(); ++i) {
 					if(i > 0) builder.append(",");
-					builder.append(tagNames.get(i));
+					builder.append("\""+tagNames.get(i)+"\"");
 				}
 				builder.append("]");
 				builder.append("}");
@@ -143,7 +197,7 @@ public class RequestHandler extends HttpServlet {
 			}
 			
 		} else {
-			String[] tags = shortQuery.split("\\s+");
+			String[] tags = shortQuery.split(",");
 			List<Series> s = null;
 			try {
 				s = DatabaseControl.get().getSeriesByTags(tags);

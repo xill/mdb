@@ -103,7 +103,6 @@ public abstract class DatabaseControl {
 			for (int i = 0; i < seriesIds.size(); ++i) {
 				int id = seriesIds.get(i);
 				Series s = getSeriesById(id);
-				System.out.println(id + " is " + ((s != null)?"not null":"null"));
 				
 				if(tags.length > 1) {
 					boolean valid = true;
