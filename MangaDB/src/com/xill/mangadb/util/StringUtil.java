@@ -1,5 +1,7 @@
 package com.xill.mangadb.util;
 
+import org.codehaus.jettison.json.JSONObject;
+
 public class StringUtil {
 
 	/**
@@ -47,8 +49,8 @@ public class StringUtil {
 	 * @param value
 	 * @return
 	 */
-	public static String toValidJson(String value) {
-		return value.replace("\\", "\\\\");
+	public static String toValidJsonValue(String value) {
+		return JSONObject.quote(value);
 	}
 
 }

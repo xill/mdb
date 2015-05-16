@@ -312,8 +312,7 @@ public class RequestHandler extends HttpServlet {
 				if (chapterNumber < chapters.size()) {
 					Chapter c = chapters.get(chapterNumber);
 					if (c != null)
-						response.getWriter().println(
-								StringUtil.toValidJson(c.outputJson()));
+						response.getWriter().println(c.outputJson());
 					else
 						response.getWriter().println("{}");
 				}
@@ -322,8 +321,7 @@ public class RequestHandler extends HttpServlet {
 					response.getWriter().println("{}");
 				}
 			} else {
-				response.getWriter().println(
-						StringUtil.toValidJson(s.outputJson()));
+				response.getWriter().println(s.outputJson());
 			}
 		}
 		// nothing to return

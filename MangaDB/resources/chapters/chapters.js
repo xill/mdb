@@ -10,6 +10,9 @@ $.ajax({
 		seriesData = resp;
 		
 		if(document.readyState == 'complete') showSeriesData();
+	},
+	"error" : function(resp) {
+		console.error(resp);
 	}
 });
 
