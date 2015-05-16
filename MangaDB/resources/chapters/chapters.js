@@ -39,6 +39,26 @@ function showSeriesData() {
 			var tagLink = $('<a href="/search/?tags='+tagData[i]+'">'+tagData[i]+'</a>');
 			tagList.append(tagLink);
 		}
+		
+		var descriptionField = $("#descriptionField");
+		descriptionField.text(seriesData.description);
+		
+		var authorName = $(".authorName");
+		var authorValue = seriesData.author;
+		var artistValue = seriesData.artist;
+		if(!authorValue) {
+			authorName.text("Unknown");
+		}
+		else {
+			if(authorValue == artistValue) {
+				authorName.append($('<a href="/search/?author='+authorValue+'">'+authorValue+'</a>'));
+			}
+			else {
+				authorName.append($('<a href="/search/?author='+authorValue+'">'+authorValue+'</a>'));
+				authorName.append(', ');
+				authorName.append($('<a href="/search/?artist='+artistValue+'">'+artistValue+'</a>'));
+			}
+		}
 	}
 	// not a valid series
 	else {
