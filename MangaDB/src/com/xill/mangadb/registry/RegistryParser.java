@@ -5,6 +5,8 @@ import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
 import java.util.Properties;
 
@@ -12,8 +14,8 @@ import com.xill.mangadb.db.Chapter;
 import com.xill.mangadb.db.Page;
 import com.xill.mangadb.db.Series;
 import com.xill.mangadb.db.Tag;
+import com.xill.mangadb.util.NaturalComparator;
 import com.xill.mangadb.util.Options;
-import com.xill.mangadb.util.StringUtil;
 
 public class RegistryParser {
 
@@ -76,7 +78,11 @@ public class RegistryParser {
 					}
 				}
 				
-				String[] chapterListing = StringUtil.sort(seriesFolder.list());
+				// perform a natural sort on file listing.
+				List<String> cL = Arrays.asList(seriesFolder.list());
+				Collections.sort(cL, new NaturalComparator());
+				String[] chapterListing = cL.toArray(new String[]{});
+
 				for( String chapterName : chapterListing ) {
 					System.out.println(registryLocation + File.separator + seriesName + File.separator + chapterName);
 					File chapterFolder = new File(registryLocation + File.separator + seriesName + File.separator + chapterName);
@@ -102,5 +108,4 @@ public class RegistryParser {
 			}
 		}
 	}
-	
 }

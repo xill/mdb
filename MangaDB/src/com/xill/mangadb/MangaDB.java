@@ -45,7 +45,7 @@ public class MangaDB {
 			RegistryParser registryParser = new RegistryParser();
 			registryParser.parseInternalRegistry();
 			List<Series> seriesRegister = registryParser.getSeriesRegistry();
-
+			
 			for(Series s : seriesRegister) {
 				try {
 					database.setSeries(s);
