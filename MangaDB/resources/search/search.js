@@ -9,6 +9,12 @@ for( var i = 0 ; i < tags.length ; ++i ) {
 var name = gup("name");
 if(!name) name = "";
 
+var authorName = gup("author");
+if(!authorName) authorName = "";
+
+var artistName = gup("artist");
+if(!artistName) artistName = "";
+
 var dataSet = undefined;
 var tagSet = undefined;
 
@@ -29,7 +35,7 @@ $.ajax({
 
 // request to fetch full data set.
 $.ajax({
-	"url" : "/api/search?tags="+rawTags+"&name="+name,
+	"url" : "/api/search?tags="+rawTags+"&name="+name+"&author="+authorName+"&artist="+artistName,
 	"dataType" : "json",
 	"success" : function(resp) {
 		console.log(resp);
@@ -42,7 +48,6 @@ $.ajax({
 	}
 });
 
-// <li><input type="checkbox" name="text1" value="value1" /><label for="text1">Text 1</label></li>
 function buildTags() {
 	var gridParent = $(".checkbox-grid");
 	var data = tagSet.tags;
@@ -70,7 +75,8 @@ function showSearchResults() {
 function onSearch() {
 
 	var nameFieldValue = $("#nameField").val();
-	console.log(nameFieldValue);
+	var authorFieldValue = $("#authorField").val();
+	var artistFieldValue = $("#artistField").val();
 	
 	var nTags = [];
 	var tagBoxes = $(".tagBox");
@@ -79,12 +85,15 @@ function onSearch() {
 		if(tagBox.checked) nTags.push($(tagBox).val());
 	}
 
-	window.location.href = location.protocol + '//' + location.host + location.pathname + "?tags=" + nTags.join(",") + "&name=" + nameFieldValue;
+	window.location.href = location.protocol + '//' + location.host + location.pathname 
+	+ "?tags=" + nTags.join(",") + "&name=" + nameFieldValue + "&author=" + authorFieldValue + "&artist=" + artistFieldValue;
 }
 
 $(document).ready(function()
 {
 	$("#nameField").val(decodeURIComponent(name));
+	$("#authorField").val(decodeURIComponent(authorName));
+	$("#artistField").val(decodeURIComponent(artistName));
 
 	if(tagSet) buildTags();
 	if(dataSet) showSearchResults();

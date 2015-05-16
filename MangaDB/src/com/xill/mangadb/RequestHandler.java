@@ -4,7 +4,9 @@ import java.io.IOException;
 import java.net.URLDecoder;
 import java.sql.SQLException;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Iterator;
+import java.util.LinkedList;
 import java.util.List;
 
 import javax.servlet.ServletException;
@@ -13,6 +15,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import com.xill.mangadb.control.DatabaseControl;
+import com.xill.mangadb.db.Author;
 import com.xill.mangadb.db.Chapter;
 import com.xill.mangadb.db.Series;
 import com.xill.mangadb.db.Tag;
@@ -66,44 +69,86 @@ public class RequestHandler extends HttpServlet {
 		}
 
 	}
-	
+
 	private void handleSearch(HttpServletRequest request,
 			HttpServletResponse response) throws ServletException, IOException {
 		String tags = request.getParameter("tags");
 		String name = request.getParameter("name");
-		
+		String author = request.getParameter("author");
+		String artist = request.getParameter("artist");
+
 		System.out.println("search");
 		System.out.println(tags);
 		System.out.println(name);
-		
-		String[] tagList = tags.split(",");
+		System.out.println(author);
+		System.out.println(artist);
+
+		String[] tagList = removeRedundant(tags.split(","));
 		List<Series> s = null;
-		try {
-			s = DatabaseControl.get().getSeriesByTags(tagList);
-		} catch (SQLException e) {
-			e.printStackTrace();
+		// no tags. get all.
+		if (tagList.length == 0) {
+			try {
+				s = DatabaseControl.get().getSeriesList();
+			} catch (SQLException e) {
+				e.printStackTrace();
+			}
 		}
-		
-		// trim results.
-		if(name != null && name.length() > 0 && !name.equals("null")) {
+		// has tags. get with given tags.
+		else {
+			try {
+				s = DatabaseControl.get().getSeriesByTags(tagList);
+			} catch (SQLException e) {
+				e.printStackTrace();
+			}
+		}
+
+		// trim results by series name.
+		if (name != null && name.length() > 0 && !name.equals("null")) {
 			Iterator<Series> it = s.iterator();
-			while(it.hasNext()) {
+			while (it.hasNext()) {
 				Series ns = it.next();
-				if(!ns.getName().contains(name)) {
+				if (!StringUtil.containsIgnoreCase(ns.getName(), name)) {
 					it.remove();
 				}
 			}
 		}
-		
+
+		// trim results by author name.
+		if (author != null && author.length() > 0 && !author.equals("null")) {
+			Iterator<Series> it = s.iterator();
+			while (it.hasNext()) {
+				Series ns = it.next();
+				Author au = ns.getAuthor();
+				if (au == null
+						|| !StringUtil.containsIgnoreCase(au.getName(), author)) {
+					it.remove();
+				}
+			}
+		}
+
+		// trim results by artist name.
+		if (artist != null && artist.length() > 0 && !artist.equals("null")) {
+			Iterator<Series> it = s.iterator();
+			while (it.hasNext()) {
+				Series ns = it.next();
+				Author au = ns.getArtist();
+				if (au == null
+						|| !StringUtil.containsIgnoreCase(au.getName(), artist)) {
+					it.remove();
+				}
+			}
+		}
+
 		System.out.println(s);
-		if(s != null && s.size() > 0) {
+		if (s != null && s.size() > 0) {
 			StringBuilder builder = new StringBuilder();
 			builder.append("{");
 			builder.append("\"series\":[");
 			for (int i = 0; i < s.size(); ++i) {
 				if (i > 0)
 					builder.append(",");
-				if(s.get(i) == null) System.out.println(i + " is null");
+				if (s.get(i) == null)
+					System.out.println(i + " is null");
 				builder.append("\"" + s.get(i).getName() + "\"");
 			}
 			builder.append("]");
@@ -114,8 +159,6 @@ public class RequestHandler extends HttpServlet {
 			response.getWriter().println("{}");
 		}
 
-		
-		
 	}
 
 	private void handleGetAll(HttpServletRequest request,
@@ -157,12 +200,13 @@ public class RequestHandler extends HttpServlet {
 
 		// for combination
 		// /api/tags/Example1+Example2
-		
-		String shortQuery = query.replace(API_GET_TAGS, "").replace("/", "").trim();
-		
+
+		String shortQuery = query.replace(API_GET_TAGS, "").replace("/", "")
+				.trim();
+
 		response.setContentType("application/json");
 		response.setStatus(HttpServletResponse.SC_OK);
-		
+
 		// get tag listing
 		if (shortQuery.length() == 0) {
 			List<Tag> tagDaos = null;
@@ -171,23 +215,24 @@ public class RequestHandler extends HttpServlet {
 			} catch (SQLException e) {
 				e.printStackTrace();
 			}
-			
-			if(tagDaos != null) {
+
+			if (tagDaos != null) {
 				List<String> tagNames = new ArrayList<String>();
-				for ( Tag t : tagDaos ) {
+				for (Tag t : tagDaos) {
 					String name = t.getName();
-					if(!tagNames.contains(name)) {
+					if (!tagNames.contains(name)) {
 						tagNames.add(name);
 					}
 				}
-				
+
 				StringBuilder builder = new StringBuilder();
 				builder.append("{");
 				builder.append("\"tags\":");
 				builder.append("[");
-				for(int i = 0 ; i < tagNames.size(); ++i) {
-					if(i > 0) builder.append(",");
-					builder.append("\""+tagNames.get(i)+"\"");
+				for (int i = 0; i < tagNames.size(); ++i) {
+					if (i > 0)
+						builder.append(",");
+					builder.append("\"" + tagNames.get(i) + "\"");
 				}
 				builder.append("]");
 				builder.append("}");
@@ -195,7 +240,7 @@ public class RequestHandler extends HttpServlet {
 			} else {
 				response.getWriter().println("{}");
 			}
-			
+
 		} else {
 			String[] tags = shortQuery.split(",");
 			List<Series> s = null;
@@ -205,14 +250,15 @@ public class RequestHandler extends HttpServlet {
 				e.printStackTrace();
 			}
 			System.out.println(s);
-			if(s != null) {
+			if (s != null) {
 				StringBuilder builder = new StringBuilder();
 				builder.append("{");
 				builder.append("\"series\":[");
 				for (int i = 0; i < s.size(); ++i) {
 					if (i > 0)
 						builder.append(",");
-					if(s.get(i) == null) System.out.println(i + " is null");
+					if (s.get(i) == null)
+						System.out.println(i + " is null");
 					builder.append("\"" + s.get(i).getName() + "\"");
 				}
 				builder.append("]");
@@ -284,5 +330,16 @@ public class RequestHandler extends HttpServlet {
 		else {
 			response.getWriter().println("{}");
 		}
+	}
+
+	private String[] removeRedundant(String... strings) {
+		List<String> out = new LinkedList<String>(Arrays.asList(strings));
+		Iterator<String> it = out.iterator();
+		while (it.hasNext()) {
+			String str = it.next();
+			if (str == null || str.isEmpty())
+				it.remove();
+		}
+		return out.toArray(new String[] {});
 	}
 }

@@ -15,12 +15,17 @@
 	</div>
 </div>
 <div class="searchBox">
-	<ul class="checkbox-grid">
-	</ul>
-	Contains:<br/>
-	<input id="nameField" type="text" name="name">
+	<div class="grids">
+		<ul class="checkbox-grid">
+		</ul>
+	</div>
 	<br/>
-	<button onclick="onSearch()">Search</button>
+	<div class="fields">
+		Series Name:<input id="nameField" type="text" name="name"><br/>
+		Author Name:<input id="authorField" type="text" name="author"><br/>
+		Artist Name:<input id="artistField" type="text" name="artist"><br/>
+		<button onclick="onSearch()">Search</button>
+	</div>
 </div>
 <div class="searchParent">
 	<div class="searchResults"></div>

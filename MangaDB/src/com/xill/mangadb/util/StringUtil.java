@@ -2,6 +2,12 @@ package com.xill.mangadb.util;
 
 public class StringUtil {
 
+	/**
+	 * TODO
+	 * 
+	 * @param array
+	 * @return
+	 */
 	public static String[] sort(String[] array) {
 		String temp;
 
@@ -18,6 +24,29 @@ public class StringUtil {
 		return array;
 	}
 	
+	/**
+	 * TODO
+	 * 
+	 * @param compareA
+	 * @param compareB
+	 * @return
+	 */
+	public static boolean containsIgnoreCase( String compareA , String compareB ) {
+		if(compareA == null) throw new NullPointerException();
+		if(compareB == null) throw new NullPointerException();
+		
+		String a = compareA.toLowerCase();
+		String b = compareB.toLowerCase();
+		
+		return a.contains(b);
+	}
+	
+	/**
+	 * TODO
+	 * 
+	 * @param value
+	 * @return
+	 */
 	public static String toValidJson(String value) {
 		return value.replace("\\", "\\\\");
 	}
