@@ -7,9 +7,12 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Properties;
 
+import com.xill.mangadb.db.Author;
 import com.xill.mangadb.db.Chapter;
 import com.xill.mangadb.db.Page;
 import com.xill.mangadb.db.Series;
@@ -22,6 +25,7 @@ public class RegistryParser {
 	private List<Series> seriesRegistry = null;
 	private List<Chapter> chapterRegistry = null;
 	private List<Page> pageRegistry = null;
+	private Map<String,Author> authorRegistry = null;
 	
 	public List<Series> getSeriesRegistry() {
 		return seriesRegistry;
@@ -46,6 +50,7 @@ public class RegistryParser {
 		seriesRegistry = new ArrayList<Series>();
 		chapterRegistry = new ArrayList<Chapter>();
 		pageRegistry = new ArrayList<Page>();
+		authorRegistry = new HashMap<String,Author>();
 		
 		File registryBase = new File(registryLocation);
 		String[] seriesListing = registryBase.list();
@@ -57,18 +62,57 @@ public class RegistryParser {
 				Series serie = new Series();
 				serie.setName(seriesFolder.getName());
 				
+				// read stored property file
 				File serieProp = new File(registryLocation + File.separator + seriesName + File.separator + "series.properties");
 				if(serieProp.exists()) {
 					Properties prop = new Properties();
 					try {
 						prop.load(new FileReader(serieProp));
+						// read tags
 						String rawTags = (String) prop.get("tags");
-						String[] tags = rawTags.split(",");
-						for( String tag : tags ) {
-							String tagName = tag.trim();
-							Tag tagObj = new Tag();
-							tagObj.setName(tagName);
-							serie.addTag(tagObj);
+						if(rawTags != null && rawTags.length() > 0) {
+							String[] tags = rawTags.split(",");
+							for( String tag : tags ) {
+								String tagName = tag.trim();
+								Tag tagObj = new Tag();
+								tagObj.setName(tagName);
+								serie.addTag(tagObj);
+							}
+						}
+						// read author
+						String authorStr = prop.getProperty("author");
+						if(authorStr != null && authorStr.length() > 0) {
+							authorStr = authorStr.trim();
+							// get author if exists.
+							Author author = authorRegistry.get(authorStr);
+							// if null. create it.
+							if(author == null) {
+								author = new Author();
+								author.setName(authorStr);
+							}
+							
+							author.addSeries(serie);
+							authorRegistry.put(authorStr, author);
+						}
+						// read artist
+						String artistStr = prop.getProperty("artist");
+						if(artistStr != null && artistStr.length() > 0) {
+							artistStr = artistStr.trim();
+							// get author if exists.
+							Author author = authorRegistry.get(artistStr);
+							// if null. create it.
+							if(author == null) {
+								author = new Author();
+								author.setName(artistStr);
+							}
+							
+							author.addSeriesArtist(serie);
+							authorRegistry.put(artistStr, author);
+						}
+						// read series description
+						String descriptionStr = prop.getProperty("description");
+						if(descriptionStr != null && descriptionStr.length() > 0) {
+							serie.setDescription(descriptionStr);
 						}
 						
 					} catch (FileNotFoundException e) {

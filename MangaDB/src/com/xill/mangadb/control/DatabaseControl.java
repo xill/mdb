@@ -10,6 +10,7 @@ import com.j256.ormlite.dao.DaoManager;
 import com.j256.ormlite.support.ConnectionSource;
 import com.j256.ormlite.support.DatabaseConnection;
 import com.j256.ormlite.table.TableUtils;
+import com.xill.mangadb.db.Author;
 import com.xill.mangadb.db.Chapter;
 import com.xill.mangadb.db.Page;
 import com.xill.mangadb.db.Series;
@@ -30,6 +31,7 @@ public abstract class DatabaseControl {
 	protected Dao<Chapter, String> chaptersDao;
 	protected Dao<Page, String> pageDao;
 	protected Dao<Tag, String> tagDao;
+	protected Dao<Author, String> authorDao;
 
 	private static DatabaseControl m_instance = null;
 
@@ -48,12 +50,14 @@ public abstract class DatabaseControl {
 		}
 
 		// create table if required.
+		TableUtils.createTableIfNotExists(source, Author.class);
 		TableUtils.createTableIfNotExists(source, Tag.class);
 		TableUtils.createTableIfNotExists(source, Page.class);
 		TableUtils.createTableIfNotExists(source, Chapter.class);
 		TableUtils.createTableIfNotExists(source, Series.class);
 
 		// instantiate the dao
+		authorDao = DaoManager.createDao(source, Author.class);
 		tagDao = DaoManager.createDao(source, Tag.class);
 		pageDao = DaoManager.createDao(source, Page.class);
 		chaptersDao = DaoManager.createDao(source, Chapter.class);
@@ -68,6 +72,20 @@ public abstract class DatabaseControl {
 		pageDao.setAutoCommit(pageConn, true);
 		DatabaseConnection tagConn = tagDao.startThreadConnection();
 		tagDao.setAutoCommit(tagConn, true);
+		DatabaseConnection authorConn = authorDao.startThreadConnection();
+		authorDao.setAutoCommit(authorConn, true);
+	}
+	
+	public List<Author> getAuthorList() throws SQLException {
+		return authorDao.queryForAll();
+	}
+	
+	public Author getAuthor(String id) throws SQLException {
+		return authorDao.queryForId(id);
+	}
+	
+	public void setAuthor(Author dao) throws SQLException {
+		authorDao.createOrUpdate(dao);
 	}
 
 	public List<Series> getSeriesList() throws SQLException {
@@ -134,6 +152,12 @@ public abstract class DatabaseControl {
 	}
 
 	public void setSeries(Series dao) throws SQLException {
+		
+		Author auth = dao.getAuthor(); 
+		if(auth != null) setAuthor(auth);
+		Author art = dao.getArtist(); 
+		if(art != null) setAuthor(art);
+		
 		seriesDao.createOrUpdate(dao);
 
 		Collection<Tag> tags = dao.getTags();
