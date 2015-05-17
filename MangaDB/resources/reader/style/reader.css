@@ -7,9 +7,16 @@
 	transform : translate(-50%,0);
 }
 
+#readerContainer.largeLayout {
+	width : 100%;
+}
+
 #readerView
 {
 	position : relative;
+}
+.largeLayout #readerView {
+	width : 100%;
 }
 
 #previousPage 
