@@ -93,6 +93,46 @@ function showReader() {
 	prevPageDiv.bind(eventKey,previousPage);
 	nextPageDiv.bind(eventKey,nextPage);
 	
+	var fsButton = $(".fsButton");
+	var fsIcon = $("#fsIcon");
+	fsButton.bind("click",function(){
+		toggleFullScreen();
+		if (!document.fullscreenElement &&    // alternative standard method
+		!document.mozFullScreenElement && !document.webkitFullscreenElement && !document.msFullscreenElement ) {  // current working methods
+			// not in fullscreen.
+			fsIcon.attr("src","../images/enterfs.png");
+		}
+		else {
+			fsIcon.attr("src","../images/exitfs.png");
+		}
+	});
+}
+
+function toggleFullScreen( elem ) {
+	
+	if(!elem) elem = document.documentElement;
+	if (!document.fullscreenElement &&    // alternative standard method
+		!document.mozFullScreenElement && !document.webkitFullscreenElement && !document.msFullscreenElement ) {  // current working methods
+		if (elem.requestFullscreen) {
+			elem.requestFullscreen();
+		} else if (elem.msRequestFullscreen) {
+			elem.msRequestFullscreen();
+		} else if (elem.mozRequestFullScreen) {
+			elem.mozRequestFullScreen();
+		} else if (elem.webkitRequestFullscreen) {
+			elem.webkitRequestFullscreen(Element.ALLOW_KEYBOARD_INPUT);
+		}
+	} else {
+		if (document.exitFullscreen) {
+			document.exitFullscreen();
+		} else if (document.msExitFullscreen) {
+			document.msExitFullscreen();
+		} else if (document.mozCancelFullScreen) {
+			document.mozCancelFullScreen();
+		} else if (document.webkitExitFullscreen) {
+			document.webkitExitFullscreen();
+		}
+	}
 }
 
 // progress to next page
