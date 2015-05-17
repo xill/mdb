@@ -19,6 +19,32 @@
 	width : 100%;
 }
 
+#plainModeButton {
+	right : 102px
+}
+
+#largeModeButton {
+	right : 85px;
+}
+
+#fitModeButton {
+	right : 68px;
+}
+
+.modeButton {
+	position: absolute;
+	width: 0.8em;
+	height: 1em;
+	border-style: solid;
+	border-width: 1px;
+	border-radius: 5px;
+	top : 10px;
+}
+
+.modeButton.active {
+	background-color : green;
+}
+
 #previousPage 
 {
 	position : absolute;

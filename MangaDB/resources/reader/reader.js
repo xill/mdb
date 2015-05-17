@@ -7,7 +7,9 @@ var pageIndex = 0;
 var readerView = undefined;
 
 var layout = 0;
-var LAYOUT_FIT = 1;
+var LAYOUT_STANDARD = 0;
+var LAYOUT_LARGE = 1;
+var LAYOUT_FIT = 2;
 
 // get start page from location hash.
 if(window.location.hash) {
@@ -110,14 +112,53 @@ function showReader() {
 		}
 	});
 	
-	// fit layout needs so script to make it work.
-	if($("#readerContainer").hasClass("fitLayout")) {
-		layout = LAYOUT_FIT;
-
-		$(window).bind("resize",function() {
-			fitReader();
-		});
+	var plainModeBtn = $('#plainModeButton');
+	var largeModeBtn = $('#largeModeButton');
+	var fitModeBtn = $('#fitModeButton');
+	
+	plainModeBtn.bind("click",function(){
+		toMode(LAYOUT_STANDARD);
 		fitReader();
+	});
+	
+	largeModeBtn.bind("click",function(){
+		toMode(LAYOUT_LARGE);
+		fitReader();
+	});
+	
+	fitModeBtn.bind("click",function(){
+		toMode(LAYOUT_FIT);
+		fitReader();
+	});
+	
+	$(window).bind("resize",function() {
+		fitReader();
+	});
+	fitReader();
+}
+
+function toMode( modeId ) {
+	if(modeId == layout) return;
+	layout = modeId;
+	
+	var container = $("#readerContainer");
+	container.removeClass("largeLayout");
+	container.removeClass("fitLayout");
+	
+	$('#plainModeButton').removeClass("active");
+	$('#largeModeButton').removeClass("active");
+	$('#fitModeButton').removeClass("active");
+	
+	if(layout == LAYOUT_STANDARD) {
+		$('#plainModeButton').addClass("active");
+	}
+	else if(layout == LAYOUT_LARGE) {
+		container.addClass("largeLayout");
+		$('#largeModeButton').addClass("active");
+	}
+	else if(layout == LAYOUT_FIT) {
+		container.addClass("fitLayout");
+		$('#fitModeButton').addClass("active");
 	}
 }
 
@@ -149,6 +190,15 @@ function toggleFullScreen( elem ) {
 }
 
 function fitReader( imgW , imgH ) {
+
+	if(layout == LAYOUT_STANDARD || layout == LAYOUT_LARGE) {
+		readerView.css({
+			"width":"",
+			"height":""
+		});
+		return;
+	}
+
 	var topBar = $('.topBar');
 	var topbarSize = parseInt(topBar.css("height")) + parseInt(topBar.css("margin-bottom"));
 	var windowWidthLeft = window.innerWidth;
@@ -156,7 +206,6 @@ function fitReader( imgW , imgH ) {
 	if(!imgW) imgW = readerView[0].width;
 	if(!imgH) imgH = readerView[0].height;
 	
-	console.log("pageSize " + imgW + " " + imgH);
 	if(imgW == 0 || imgH == 0) {
 		setTimeout(fitReader,1);
 		return;
