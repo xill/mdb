@@ -6,6 +6,9 @@ var seriesData = undefined;
 var pageIndex = 0;
 var readerView = undefined;
 
+var layout = 0;
+var LAYOUT_FIT = 1;
+
 // get start page from location hash.
 if(window.location.hash) {
 	pageIndex = parseInt(window.location.hash.substring(1));
@@ -106,6 +109,16 @@ function showReader() {
 			fsIcon.attr("src","../images/exitfs.png");
 		}
 	});
+	
+	// fit layout needs so script to make it work.
+	if($("#readerContainer").hasClass("fitLayout")) {
+		layout = LAYOUT_FIT;
+
+		$(window).bind("resize",function() {
+			fitReader();
+		});
+		fitReader();
+	}
 }
 
 function toggleFullScreen( elem ) {
@@ -135,6 +148,41 @@ function toggleFullScreen( elem ) {
 	}
 }
 
+function fitReader( imgW , imgH ) {
+	var topBar = $('.topBar');
+	var topbarSize = parseInt(topBar.css("height")) + parseInt(topBar.css("margin-bottom"));
+	var windowWidthLeft = window.innerWidth;
+	var windowHeightLeft = window.innerHeight - topbarSize;
+	if(!imgW) imgW = readerView[0].width;
+	if(!imgH) imgH = readerView[0].height;
+	
+	console.log("pageSize " + imgW + " " + imgH);
+	if(imgW == 0 || imgH == 0) {
+		setTimeout(fitReader,1);
+		return;
+	}
+	
+	var nW = 0;
+	var nH = 0;
+	
+	var s = windowHeightLeft / imgH;
+	if(s*imgW > windowWidthLeft) {
+		nW = windowWidthLeft;
+		s = windowWidthLeft / imgW;
+		nH = parseInt(s*imgH);
+	}
+	else {
+		nW = parseInt(s*imgW);
+		nH = windowHeightLeft;
+	}
+	
+	readerView.css({
+		"width":nW+"px",
+		"height":nH+"px"
+	});
+	
+}
+
 // progress to next page
 function nextPage() {
 	pageIndex++;
@@ -144,9 +192,7 @@ function nextPage() {
 		return;
 	}
 	
-	readerView.attr("src",buildPageUrl(pageIndex));
-	scrollUp();
-	window.location.hash = "#"+pageIndex;
+	goToPage();
 }
 
 // progress to previous page
@@ -161,9 +207,19 @@ function previousPage() {
 		return;
 	}
 	
-	readerView.attr("src",buildPageUrl(pageIndex));
-	scrollUp();
-	window.location.hash = "#"+pageIndex;
+	goToPage();
+}
+
+function goToPage() {
+	var pageUrl = buildPageUrl(pageIndex);
+	var img = new Image();
+	img.onload = function() {
+		readerView.attr("src",img.src);
+		if(layout == LAYOUT_FIT) fitReader(img.width,img.height);
+		scrollUp();
+		window.location.hash = "#"+pageIndex;
+	}
+	img.src = pageUrl;
 }
 
 /**
