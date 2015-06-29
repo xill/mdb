@@ -5,8 +5,6 @@ import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -17,7 +15,6 @@ import com.xill.mangadb.db.Chapter;
 import com.xill.mangadb.db.Page;
 import com.xill.mangadb.db.Series;
 import com.xill.mangadb.db.Tag;
-import com.xill.mangadb.util.NaturalComparator;
 import com.xill.mangadb.util.Options;
 
 public class RegistryParser {
@@ -114,6 +111,11 @@ public class RegistryParser {
 						if(descriptionStr != null && descriptionStr.length() > 0) {
 							serie.setDescription(descriptionStr);
 						}
+						// chapter order
+						String chapterOrderStr = prop.getProperty("chapter_order");
+						if(chapterOrderStr != null && chapterOrderStr.length() > 0) {
+							serie.setChapterOrder(chapterOrderStr);
+						}
 						
 					} catch (FileNotFoundException e) {
 						e.printStackTrace();
@@ -122,11 +124,8 @@ public class RegistryParser {
 					}
 				}
 				
-				// perform a natural sort on file listing.
-				List<String> cL = Arrays.asList(seriesFolder.list());
-				Collections.sort(cL, new NaturalComparator());
-				String[] chapterListing = cL.toArray(new String[]{});
-
+				String[] chapterListing = seriesFolder.list();
+				// go through chapters.
 				for( String chapterName : chapterListing ) {
 					System.out.println(registryLocation + File.separator + seriesName + File.separator + chapterName);
 					File chapterFolder = new File(registryLocation + File.separator + seriesName + File.separator + chapterName);
@@ -148,6 +147,10 @@ public class RegistryParser {
 						serie.addChapter(chapter);
 					}
 				}
+				// sort chapters in this series
+				serie.sortToOrder();
+				serie.saveProperties();
+				// add parsed series to registry
 				seriesRegistry.add(serie);
 			}
 		}
