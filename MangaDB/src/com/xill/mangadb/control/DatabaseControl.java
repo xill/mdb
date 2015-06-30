@@ -14,6 +14,7 @@ import com.xill.mangadb.db.Author;
 import com.xill.mangadb.db.Chapter;
 import com.xill.mangadb.db.Page;
 import com.xill.mangadb.db.Series;
+import com.xill.mangadb.db.SeriesName;
 import com.xill.mangadb.db.Tag;
 
 public abstract class DatabaseControl {
@@ -32,6 +33,7 @@ public abstract class DatabaseControl {
 	protected Dao<Page, String> pageDao;
 	protected Dao<Tag, String> tagDao;
 	protected Dao<Author, String> authorDao;
+	protected Dao<SeriesName, String> seriesNameDao;
 
 	private static DatabaseControl m_instance = null;
 
@@ -54,6 +56,7 @@ public abstract class DatabaseControl {
 		TableUtils.createTableIfNotExists(source, Tag.class);
 		TableUtils.createTableIfNotExists(source, Page.class);
 		TableUtils.createTableIfNotExists(source, Chapter.class);
+		TableUtils.createTableIfNotExists(source, SeriesName.class);
 		TableUtils.createTableIfNotExists(source, Series.class);
 
 		// instantiate the dao
@@ -61,11 +64,14 @@ public abstract class DatabaseControl {
 		tagDao = DaoManager.createDao(source, Tag.class);
 		pageDao = DaoManager.createDao(source, Page.class);
 		chaptersDao = DaoManager.createDao(source, Chapter.class);
+		seriesNameDao = DaoManager.createDao(source, SeriesName.class);
 		seriesDao = DaoManager.createDao(source, Series.class);
 
 		// setup auto connections.
 		DatabaseConnection seriesConn = seriesDao.startThreadConnection();
 		seriesDao.setAutoCommit(seriesConn, true);
+		DatabaseConnection seriesNameConn = seriesNameDao.startThreadConnection();
+		seriesNameDao.setAutoCommit(seriesNameConn, true);
 		DatabaseConnection chapterConn = chaptersDao.startThreadConnection();
 		chaptersDao.setAutoCommit(chapterConn, true);
 		DatabaseConnection pageConn = pageDao.startThreadConnection();
@@ -160,6 +166,11 @@ public abstract class DatabaseControl {
 		
 		seriesDao.createOrUpdate(dao);
 
+		Collection<SeriesName> seriesName = dao.getSeriesNames();
+		for (SeriesName sn : seriesName) {
+			setSeriesName(sn);
+		}
+		
 		Collection<Tag> tags = dao.getTags();
 		for (Tag t : tags) {
 			setTag(t);
@@ -190,6 +201,14 @@ public abstract class DatabaseControl {
 
 	public void setPage(Page dao) throws SQLException {
 		pageDao.createOrUpdate(dao);
+	}
+	
+	public SeriesName getSeriesName(String id) throws SQLException {
+		return seriesNameDao.queryForId(id);
+	}
+	
+	public void setSeriesName(SeriesName dao) throws SQLException {
+		seriesNameDao.createOrUpdate(dao);
 	}
 
 	public List<Tag> getAllTags() throws SQLException {

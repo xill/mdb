@@ -30,11 +30,22 @@ function showDirectory() {
 	// base directory element.
 	var grid = $(".gridParent");
 	
+	// link used name to key
+	var nameToKey = {};
+
 	var data = undefined;
 	if(REGUEST_MODE == TAGS_MODE) {
+		for(var i = 0 ; i < dataSet.tags.length; ++i) {
+			nameToKey[dataSet.tags[i]] = dataSet.tags[i];
+		}
 		data = dataSet.tags;
 	} else {
-		data = dataSet.series;
+		var sNames = [];
+		for(var i = 0 ; i < dataSet.series.length; ++i) {
+			nameToKey[dataSet.series[i].names[0]] = dataSet.series[i].name;
+			sNames.push(dataSet.series[i].names[0]);
+		}
+		data = sNames;
 	}
 	
 	// all the data with first letter of the data name as key.
@@ -64,9 +75,9 @@ function showDirectory() {
 		subGrid.append('<b>'+keyName+'</b><br/>');
 		for(var f = 0 ; f < keyValue.length ; ++f) {
 			if(REGUEST_MODE == TAGS_MODE) {
-				subGrid.append($('<div><a href="/search/?tags='+keyValue[f]+'">'+keyValue[f]+'</a></div>'));
+				subGrid.append($('<div><a href="/search/?tags='+nameToKey[keyValue[f]]+'">'+keyValue[f]+'</a></div>'));
 			} else {
-				subGrid.append($('<div><a href="/chapters/?name='+keyValue[f]+'">'+keyValue[f]+'</a></div>'));
+				subGrid.append($('<div><a href="/chapters/?name='+nameToKey[keyValue[f]]+'">'+keyValue[f]+'</a></div>'));
 			}
 		}
 	}

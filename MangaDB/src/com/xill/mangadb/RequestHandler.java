@@ -18,6 +18,7 @@ import com.xill.mangadb.control.DatabaseControl;
 import com.xill.mangadb.db.Author;
 import com.xill.mangadb.db.Chapter;
 import com.xill.mangadb.db.Series;
+import com.xill.mangadb.db.SeriesName;
 import com.xill.mangadb.db.Tag;
 import com.xill.mangadb.util.StringUtil;
 
@@ -177,7 +178,18 @@ public class RequestHandler extends HttpServlet {
 			for (int i = 0; i < seriesSet.size(); ++i) {
 				if (i > 0)
 					builder.append(",");
-				builder.append("\"" + seriesSet.get(i).getName() + "\"");
+				
+				Series serie = seriesSet.get(i);
+				builder.append("{");
+				builder.append("\"name\":\""+serie.getName()+"\",");
+				builder.append("\"names\": [");
+				List<SeriesName> sNames = new ArrayList<SeriesName>(serie.getSeriesNames());
+				for(int f = 0; f < sNames.size(); ++f ) {
+					if(f > 0) builder.append(",");
+					builder.append("\""+sNames.get(f).getName()+"\"");
+				}
+				builder.append("]");
+				builder.append("}");
 			}
 			builder.append("]");
 			builder.append("}");

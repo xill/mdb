@@ -29,10 +29,14 @@ public class Series {
 	private String description = "";
 	@DatabaseField(dataType = DataType.STRING)
 	private String chapterOrder = "";
+	
 	@ForeignCollectionField
 	private Collection<Chapter> chapters = new ArrayList<Chapter>();
 	@ForeignCollectionField
 	private Collection<Tag> tags = new ArrayList<Tag>();
+	@ForeignCollectionField
+	private Collection<SeriesName> seriesNames = new ArrayList<SeriesName>(); 
+	
 	@DatabaseField(foreign = true, foreignAutoRefresh = true, columnName = "author_id")
 	private Author author;
 	@DatabaseField(foreign = true, foreignAutoRefresh = true, columnName = "artist_id")
@@ -40,8 +44,10 @@ public class Series {
 	
 	public static final String KEY_TAGS = "tags";
 	public static final String KEY_AUTHOR = "author";
+	public static final String KEY_ARTIST = "artist";
 	public static final String KEY_DESCRIPTION = "description";
 	public static final String KEY_CHAPTER_ORDER = "chapter_order";
+	public static final String KEY_NAMES = "names";
 	
 	public void setAuthor(Author author) {
 		this.author = author;
@@ -77,6 +83,24 @@ public class Series {
 	public Collection<Tag> getTags() {
 		return tags;
 	}
+	
+	public void addSeriesName(SeriesName name) {
+		name.setRefSeries(this);
+		seriesNames.add(name);
+	}
+	
+	public Collection<SeriesName> getSeriesNames() {
+		return seriesNames;
+	}
+	
+	public String getSeriesNameString() {
+		StringBuilder builder = new StringBuilder();
+		for( SeriesName n : seriesNames ) {
+			if(builder.length() > 0) builder.append(",");
+			builder.append(n.getName());
+		}
+		return builder.toString();
+	}
 
 	public String getName() {
 		return name;
@@ -104,6 +128,17 @@ public class Series {
 	
 	public int getId() {
 		return id;
+	}
+	
+	/**
+	 * Set some default values.
+	 */
+	public void setDefaults() {
+		if(seriesNames.isEmpty()) {
+			SeriesName sn = new SeriesName();
+			sn.setName(name);
+			addSeriesName(sn);
+		}
 	}
 	
 	/**
@@ -188,6 +223,7 @@ public class Series {
 		}
 		
 		p.setProperty(KEY_CHAPTER_ORDER, this.chapterOrder);
+		p.setProperty(KEY_NAMES, getSeriesNameString());
 		
 		// write properties
 		try {
@@ -204,6 +240,13 @@ public class Series {
 		builder.append("{");
 		builder.append("\"id\":"+StringUtil.toValidJsonValue(id+"")+",");
 		builder.append("\"name\":"+StringUtil.toValidJsonValue(name)+",");
+		List<SeriesName> names = new ArrayList<SeriesName>(seriesNames);
+		builder.append("\"names\":[");
+		for(int i = 0; i < names.size(); ++i) {
+			if(i > 0) builder.append(",");
+			builder.append(StringUtil.toValidJsonValue(names.get(i).getName()));
+		}
+		builder.append("],");
 		builder.append("\"chapters\":");
 		builder.append("[");
 		List<Chapter> chapterList = new ArrayList<Chapter>(chapters);
@@ -221,6 +264,13 @@ public class Series {
 		StringBuilder builder = new StringBuilder();
 		builder.append("{");
 		builder.append("\"name\":"+StringUtil.toValidJsonValue(name)+",");
+		List<SeriesName> names = new ArrayList<SeriesName>(seriesNames);
+		builder.append("\"names\":[");
+		for(int i = 0; i < names.size(); ++i) {
+			if(i > 0) builder.append(",");
+			builder.append(StringUtil.toValidJsonValue(names.get(i).getName()));
+		}
+		builder.append("],");
 		if(author != null) builder.append("\"author\":"+StringUtil.toValidJsonValue(author.getName())+",");
 		if(artist != null) builder.append("\"artist\":"+StringUtil.toValidJsonValue(artist.getName())+",");
 		builder.append("\"description\":"+StringUtil.toValidJsonValue(description)+",");

@@ -14,6 +14,7 @@ import com.xill.mangadb.db.Author;
 import com.xill.mangadb.db.Chapter;
 import com.xill.mangadb.db.Page;
 import com.xill.mangadb.db.Series;
+import com.xill.mangadb.db.SeriesName;
 import com.xill.mangadb.db.Tag;
 import com.xill.mangadb.util.Options;
 
@@ -66,7 +67,7 @@ public class RegistryParser {
 					try {
 						prop.load(new FileReader(serieProp));
 						// read tags
-						String rawTags = (String) prop.get("tags");
+						String rawTags = (String) prop.get(Series.KEY_TAGS);
 						if(rawTags != null && rawTags.length() > 0) {
 							String[] tags = rawTags.split(",");
 							for( String tag : tags ) {
@@ -77,7 +78,7 @@ public class RegistryParser {
 							}
 						}
 						// read author
-						String authorStr = prop.getProperty("author");
+						String authorStr = prop.getProperty(Series.KEY_AUTHOR);
 						if(authorStr != null && authorStr.length() > 0) {
 							authorStr = authorStr.trim();
 							// get author if exists.
@@ -89,10 +90,11 @@ public class RegistryParser {
 							}
 							
 							author.addSeries(serie);
+							// TODO
 							authorRegistry.put(authorStr, author);
 						}
 						// read artist
-						String artistStr = prop.getProperty("artist");
+						String artistStr = prop.getProperty(Series.KEY_ARTIST);
 						if(artistStr != null && artistStr.length() > 0) {
 							artistStr = artistStr.trim();
 							// get author if exists.
@@ -103,18 +105,29 @@ public class RegistryParser {
 								author.setName(artistStr);
 							}
 							
+							// TODO
 							author.addSeriesArtist(serie);
 							authorRegistry.put(artistStr, author);
 						}
 						// read series description
-						String descriptionStr = prop.getProperty("description");
+						String descriptionStr = prop.getProperty(Series.KEY_DESCRIPTION);
 						if(descriptionStr != null && descriptionStr.length() > 0) {
 							serie.setDescription(descriptionStr);
 						}
 						// chapter order
-						String chapterOrderStr = prop.getProperty("chapter_order");
+						String chapterOrderStr = prop.getProperty(Series.KEY_CHAPTER_ORDER);
 						if(chapterOrderStr != null && chapterOrderStr.length() > 0) {
 							serie.setChapterOrder(chapterOrderStr);
+						}
+						// read names
+						String namesStr = prop.getProperty(Series.KEY_NAMES);
+						if(namesStr != null && namesStr.length() > 0) {
+							String[] names = namesStr.split(",");
+							for( String n : names ) {
+								SeriesName sn = new SeriesName();
+								sn.setName(n);
+								serie.addSeriesName(sn);
+							}
 						}
 						
 					} catch (FileNotFoundException e) {
@@ -147,7 +160,7 @@ public class RegistryParser {
 						serie.addChapter(chapter);
 					}
 				}
-				// sort chapters in this series
+				serie.setDefaults();
 				serie.sortToOrder();
 				serie.saveProperties();
 				// add parsed series to registry
