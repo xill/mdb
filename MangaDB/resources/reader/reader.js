@@ -112,6 +112,99 @@ function showReader() {
 		}
 	});
 	
+	// setup page select
+	var scrollContainer = $("#pageScrollContainer");
+	for( var i = 0; i < chapterData.pages.length; ++i ) {
+		// TODO set initial page selection.
+		var li = $('<li class="pageScrollLine">'+(i+1)+'</li>');
+		scrollContainer.append(li);
+	}
+	
+	// stored previous coordinates.
+	var prevX = undefined;
+	var prevY = undefined;
+	// tracks scroll distance
+	var dist = 0;
+	// max distance and still considered a click.
+	var maxDist = 5;
+	// distance modifier for scrolling
+	var scrollMod = 2;
+	
+	var pageScroll = $("#pageScroll");
+	pageScroll.bind("mousedown",function(e){
+
+		// get initial mouse position
+		prevX = e.originalEvent.pageX;
+		prevY = e.originalEvent.pageY;
+		
+		e.stopPropagation();
+		e.preventDefault();
+	});
+	
+	pageScroll.bind("mousemove",function(e){
+		
+		// keep scrolling if mouse is pressed down.
+		if(typeof prevY !== "undefined" && e) {
+			var x = e.originalEvent.pageX;
+			var y = e.originalEvent.pageY;
+			
+			var diffX = prevX - x;
+			var diffY = prevY - y;
+			dist += Math.abs(diffX) + Math.abs(diffY);
+			
+			prevX = x;
+			prevY = y;
+
+			pageScroll.scrollTop(pageScroll.scrollTop() + diffY * scrollMod);
+			e.stopPropagation();
+			e.preventDefault();
+		}
+		
+	});
+	
+	pageScroll.bind("mouseup mouseout",function(e){
+		
+		var ev = e.toElement || e.relatedTarget;
+		// handle clicks
+		if(e.type === "mouseup" && dist <= maxDist) {
+			// determine what was clicked.
+			var t = (ev) ? $(ev).text() : undefined;
+			if(t) {
+				pageIndex = parseInt(t)-1;
+				goToPage();
+				
+				// TODO have goToPage modify the pageScroll selection.
+				// if the selection is out of view. move scroll to view.
+			}
+		}
+		
+		// handle end of drags.
+		if((e.type === "mouseout" && (ev == pageScroll[0] || ev == scrollContainer[0])) 
+			|| e.type === "mouseup"
+		) {
+			if(typeof prevY !== "undefined" && e) {
+				
+				
+				
+				//console.log(e);
+				var x = e.originalEvent.pageX;
+				var y = e.originalEvent.pageY;
+				
+				var diffX = prevX - x;
+				var diffY = prevY - y;
+				
+				prevX = undefined;
+				prevY = undefined;
+				dist = 0;
+
+				pageScroll.scrollTop(pageScroll.scrollTop() + diffY * scrollMod);
+				e.stopPropagation();
+				e.preventDefault();
+			}
+		}
+	});
+	
+	// setup layout buttons
 	var plainModeBtn = $('#plainModeButton');
 	var largeModeBtn = $('#largeModeButton');
 	var fitModeBtn = $('#fitModeButton');
