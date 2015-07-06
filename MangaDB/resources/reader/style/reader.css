@@ -82,6 +82,7 @@
 	color : black;
 	border-style : solid;
 	border-width : 1px;
+	border-color : white;
 }
 
 .pageScrollLine
@@ -95,4 +96,10 @@
     -moz-user-select: none;
     -ms-user-select: none;
     user-select: none;
+}
+
+.pageScrollLine.enabled
+{
+	background-color:rgb(10,10,150);
+	color : white;
 }

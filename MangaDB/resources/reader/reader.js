@@ -88,9 +88,6 @@ function showReader() {
 		pageIndex = 0;
 	}
 	
-	readerView.attr("src",buildPageUrl(pageIndex));
-	window.location.hash = "#"+pageIndex;
-	
 	var prevPageDiv = $("#previousPage");
 	var nextPageDiv = $("#nextPage");
 	
@@ -116,7 +113,7 @@ function showReader() {
 	var scrollContainer = $("#pageScrollContainer");
 	for( var i = 0; i < chapterData.pages.length; ++i ) {
 		// TODO set initial page selection.
-		var li = $('<li class="pageScrollLine">'+(i+1)+'</li>');
+		var li = $('<li class="pageScrollLine pageline'+i+'">'+(i+1)+'</li>');
 		scrollContainer.append(li);
 	}
 	
@@ -172,9 +169,6 @@ function showReader() {
 			if(t) {
 				pageIndex = parseInt(t)-1;
 				goToPage();
-				
-				// TODO have goToPage modify the pageScroll selection.
-				// if the selection is out of view. move scroll to view.
 			}
 		}
 		
@@ -227,6 +221,9 @@ function showReader() {
 	$(window).bind("resize",function() {
 		fitReader();
 	});
+	
+	// finalize view.
+	goToPage();
 	fitReader();
 }
 
@@ -362,6 +359,15 @@ function goToPage() {
 		window.location.hash = "#"+pageIndex;
 	}
 	img.src = pageUrl;
+	
+	// remove previous page indicator
+	var lines = $(".pageScrollLine");
+	lines.removeClass("enabled");
+	
+	// add new page indicator
+	var pageLine = $(".pageline"+pageIndex);
+	pageLine.addClass("enabled");
+	pageLine[0].parentNode.parentNode.scrollTop = pageLine[0].offsetTop - pageLine[0].parentNode.offsetTop;
 }
 
 /**
