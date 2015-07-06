@@ -16,6 +16,7 @@ import com.xill.mangadb.db.Page;
 import com.xill.mangadb.db.Series;
 import com.xill.mangadb.db.SeriesName;
 import com.xill.mangadb.db.Tag;
+import com.xill.mangadb.db.Thumbnail;
 
 public abstract class DatabaseControl {
 
@@ -34,6 +35,7 @@ public abstract class DatabaseControl {
 	protected Dao<Tag, String> tagDao;
 	protected Dao<Author, String> authorDao;
 	protected Dao<SeriesName, String> seriesNameDao;
+	protected Dao<Thumbnail, String> thumbnailDao;
 
 	private static DatabaseControl m_instance = null;
 
@@ -56,6 +58,7 @@ public abstract class DatabaseControl {
 		TableUtils.createTableIfNotExists(source, Tag.class);
 		TableUtils.createTableIfNotExists(source, Page.class);
 		TableUtils.createTableIfNotExists(source, Chapter.class);
+		TableUtils.createTableIfNotExists(source, Thumbnail.class);
 		TableUtils.createTableIfNotExists(source, SeriesName.class);
 		TableUtils.createTableIfNotExists(source, Series.class);
 
@@ -64,6 +67,7 @@ public abstract class DatabaseControl {
 		tagDao = DaoManager.createDao(source, Tag.class);
 		pageDao = DaoManager.createDao(source, Page.class);
 		chaptersDao = DaoManager.createDao(source, Chapter.class);
+		thumbnailDao = DaoManager.createDao(source, Thumbnail.class);
 		seriesNameDao = DaoManager.createDao(source, SeriesName.class);
 		seriesDao = DaoManager.createDao(source, Series.class);
 
@@ -72,6 +76,8 @@ public abstract class DatabaseControl {
 		seriesDao.setAutoCommit(seriesConn, true);
 		DatabaseConnection seriesNameConn = seriesNameDao.startThreadConnection();
 		seriesNameDao.setAutoCommit(seriesNameConn, true);
+		DatabaseConnection thumbnailConn = thumbnailDao.startThreadConnection();
+		thumbnailDao.setAutoCommit(thumbnailConn, true);
 		DatabaseConnection chapterConn = chaptersDao.startThreadConnection();
 		chaptersDao.setAutoCommit(chapterConn, true);
 		DatabaseConnection pageConn = pageDao.startThreadConnection();
@@ -163,6 +169,8 @@ public abstract class DatabaseControl {
 		if(auth != null) setAuthor(auth);
 		Author art = dao.getArtist(); 
 		if(art != null) setAuthor(art);
+		Thumbnail thumb = dao.getThumbnail();
+		if(thumb != null) setThumbnail(thumb);
 		
 		seriesDao.createOrUpdate(dao);
 
@@ -209,6 +217,14 @@ public abstract class DatabaseControl {
 	
 	public void setSeriesName(SeriesName dao) throws SQLException {
 		seriesNameDao.createOrUpdate(dao);
+	}
+	
+	public Thumbnail getThumbnail(String id) throws SQLException {
+		return thumbnailDao.queryForId(id);
+	}
+	
+	public void setThumbnail(Thumbnail dao) throws SQLException {
+		thumbnailDao.createOrUpdate(dao);
 	}
 
 	public List<Tag> getAllTags() throws SQLException {

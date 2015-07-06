@@ -22,8 +22,8 @@ $(document).ready(function(){
 
 function showSeriesData() {
 	// check if valid series
-	if(seriesData && seriesData.name) {
-		$(".seriesName").text(seriesData.name);
+	if(seriesData && seriesData.name) { 
+		$(".seriesName").text(seriesData.name); // TODO use one of the actual names.
 		var chapterList = $(".chapterList");
 		var chapters = seriesData.chapters;
 		for( var i = 0 ; i < chapters.length; ++i ) {
@@ -58,6 +58,31 @@ function showSeriesData() {
 				authorName.append(', ');
 				authorName.append($('<a href="/search/?artist='+artistValue+'">'+artistValue+'</a>'));
 			}
+		}
+		
+		if(seriesData.thumbnail) {
+			var thumbnail = $("#thumbnail");
+			var img = new Image();
+			img.onload = function() {
+				var w = 0;
+				var h = 0;
+				var m = 175;
+				if(img.width < img.height) {
+					w = m;
+					h = w * (img.height / img.width);
+				}
+				else {
+					h = m;
+					w = h * (img.width / img.height);
+				}
+				
+				thumbnail.css({
+					"background-image":"url("+img.src+")",
+					"width" : w + "px",
+					"height" : h + "px"
+				});
+			};
+			img.src = "/"+seriesName+"/"+seriesData.thumbnail;
 		}
 	}
 	// not a valid series

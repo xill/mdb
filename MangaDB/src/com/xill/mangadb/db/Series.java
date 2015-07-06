@@ -41,6 +41,8 @@ public class Series {
 	private Author author;
 	@DatabaseField(foreign = true, foreignAutoRefresh = true, columnName = "artist_id")
 	private Author artist;
+	@DatabaseField(foreign = true, foreignAutoRefresh = true, columnName = "thumbnail_id")
+	private Thumbnail thumbnail;
 	
 	public static final String KEY_TAGS = "tags";
 	public static final String KEY_AUTHOR = "author";
@@ -48,6 +50,7 @@ public class Series {
 	public static final String KEY_DESCRIPTION = "description";
 	public static final String KEY_CHAPTER_ORDER = "chapter_order";
 	public static final String KEY_NAMES = "names";
+	public static final String KEY_THUMBNAIL = "thumbnail";
 	
 	public void setAuthor(Author author) {
 		this.author = author;
@@ -64,6 +67,15 @@ public class Series {
 	
 	public Author getArtist() {
 		return this.artist;
+	}
+	
+	public void setThumbnail(Thumbnail thumbnail) {
+		thumbnail.addThumbnailSeries(this);
+		this.thumbnail = thumbnail; 
+	}
+	
+	public Thumbnail getThumbnail() {
+		return this.thumbnail;
 	}
 
 	public void addChapter(Chapter chapter) {
@@ -224,6 +236,7 @@ public class Series {
 		
 		p.setProperty(KEY_CHAPTER_ORDER, this.chapterOrder);
 		p.setProperty(KEY_NAMES, getSeriesNameString());
+		if(this.thumbnail != null) p.setProperty(KEY_THUMBNAIL, this.thumbnail.getUrl());
 		
 		// write properties
 		try {
@@ -274,6 +287,7 @@ public class Series {
 		if(author != null) builder.append("\"author\":"+StringUtil.toValidJsonValue(author.getName())+",");
 		if(artist != null) builder.append("\"artist\":"+StringUtil.toValidJsonValue(artist.getName())+",");
 		builder.append("\"description\":"+StringUtil.toValidJsonValue(description)+",");
+		builder.append("\"thumbnail\":"+StringUtil.toValidJsonValue((thumbnail != null)?thumbnail.getUrl():"")+",");
 		builder.append("\"chapters\":");
 		builder.append("[");
 		List<Chapter> chapterList = new ArrayList<Chapter>(chapters);

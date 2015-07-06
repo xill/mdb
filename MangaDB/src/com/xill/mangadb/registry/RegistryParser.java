@@ -18,6 +18,7 @@ import com.xill.mangadb.db.Page;
 import com.xill.mangadb.db.Series;
 import com.xill.mangadb.db.SeriesName;
 import com.xill.mangadb.db.Tag;
+import com.xill.mangadb.db.Thumbnail;
 import com.xill.mangadb.util.NaturalComparator;
 import com.xill.mangadb.util.Options;
 
@@ -131,6 +132,13 @@ public class RegistryParser {
 								sn.setName(n);
 								serie.addSeriesName(sn);
 							}
+						}
+						// read thumbnail
+						String thumbUrl = prop.getProperty(Series.KEY_THUMBNAIL);
+						if(thumbUrl != null && thumbUrl.length() > 0) {
+							Thumbnail thumb = new Thumbnail();
+							thumb.setUrl(thumbUrl);
+							serie.setThumbnail(thumb);
 						}
 						
 					} catch (FileNotFoundException e) {

@@ -177,9 +177,6 @@ function showReader() {
 		) {
 			if(typeof prevY !== "undefined" && e) {
 				
-				
-				
-				//console.log(e);
 				var x = e.originalEvent.pageX;
 				var y = e.originalEvent.pageY;
 				

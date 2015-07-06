@@ -1,3 +1,8 @@
 .authorName {
 	display: inline-block
 }
+
+#thumbnail {
+	background-size: 100%;
+	background-repeat : no-repeat;
+}
