@@ -112,7 +112,6 @@ function showReader() {
 	// setup page select
 	var scrollContainer = $("#pageScrollContainer");
 	for( var i = 0; i < chapterData.pages.length; ++i ) {
-		// TODO set initial page selection.
 		var li = $('<li class="pageScrollLine pageline'+i+'">'+(i+1)+'</li>');
 		scrollContainer.append(li);
 	}
@@ -216,6 +215,18 @@ function showReader() {
 	fitModeBtn.bind("click",function(){
 		toMode(LAYOUT_FIT);
 		fitReader();
+	});
+	
+	// chapter change buttons.
+	var prevButton = $('.prevButton');
+	var nextButton = $('.nextButton');
+	
+	prevButton.bind("click",function(){
+		window.location.href = "/reader/?name="+seriesName+"&ch="+(chapterNumber-1);
+	});
+	
+	nextButton.bind("click",function(){
+		window.location.href = "/reader/?name="+seriesName+"&ch="+(chapterNumber+1);
 	});
 	
 	$(window).bind("resize",function() {
