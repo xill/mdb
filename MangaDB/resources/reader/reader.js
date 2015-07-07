@@ -6,10 +6,20 @@ var seriesData = undefined;
 var pageIndex = 0;
 var readerView = undefined;
 
-var layout = 0;
+var layout = -1;
 var LAYOUT_STANDARD = 0;
 var LAYOUT_LARGE = 1;
 var LAYOUT_FIT = 2;
+
+if(typeof localStorage !== "undefined") {
+	try {
+		layout = parseInt(localStorage.getItem("layout"));
+		if(isNaN(layout)) layout = -1;
+	} catch(e) {
+		layout = -1;
+	}
+}
+
 
 // get start page from location hash.
 if(window.location.hash) {
@@ -230,6 +240,21 @@ function showReader() {
 		fitReader();
 	});
 	
+	// set previous layout mode.
+	if(layout != -1) {
+		var tmp = layout;
+		layout = -1;
+		toMode(tmp);
+	}
+	// set large basic layout for mobile
+	else if(navigator.userAgent.toLowerCase().indexOf("mobile") != -1) {
+		toMode(LAYOUT_LARGE);
+	}
+	// set standard basic layout for everyone else.
+	else {
+		toMode(LAYOUT_STANDARD);
+	}
+
 	// finalize view.
 	goToPage();
 	fitReader();
@@ -239,6 +264,10 @@ function toMode( modeId ) {
 	if(modeId == layout) return;
 	layout = modeId;
 	
+	if(typeof localStorage !== "undefined") {
+		localStorage.setItem("layout",""+layout);
+	}
+
 	var container = $("#readerContainer");
 	container.removeClass("largeLayout");
 	container.removeClass("fitLayout");
