@@ -360,11 +360,14 @@ function previousPage() {
 function goToPage() {
 	var pageUrl = buildPageUrl(pageIndex);
 	var img = new Image();
+	var spinner = $('#spinnerIcon');
+	spinner.show();
 	img.onload = function() {
 		readerView.attr("src",img.src);
 		if(layout == LAYOUT_FIT) fitReader(img.width,img.height);
 		scrollUp();
 		window.location.hash = "#"+pageIndex;
+		spinner.hide();
 	}
 	img.src = pageUrl;
 	
