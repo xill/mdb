@@ -75,7 +75,7 @@ function showDirectory() {
 		subGrid.append('<b>'+keyName+'</b><br/>');
 		for(var f = 0 ; f < keyValue.length ; ++f) {
 			if(REGUEST_MODE == TAGS_MODE) {
-				subGrid.append($('<div><a href="/search/?tags='+nameToKey[keyValue[f]]+'">'+keyValue[f]+'</a></div>'));
+				subGrid.append($('<div><a href="/search/?tags='+nameToKey[keyValue[f]]+'">'+keyValue[f]+' ('+dataSet.count[keyValue[f]]+')</a></div>'));
 			} else {
 				subGrid.append($('<div><a href="/chapters/?name='+nameToKey[keyValue[f]]+'">'+keyValue[f]+'</a></div>'));
 			}

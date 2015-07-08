@@ -5,9 +5,11 @@ import java.net.URLDecoder;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.HashMap;
 import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Map;
 
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
@@ -230,10 +232,15 @@ public class RequestHandler extends HttpServlet {
 
 			if (tagDaos != null) {
 				List<String> tagNames = new ArrayList<String>();
+				Map<String,Integer> tagCounts = new HashMap<String,Integer>();
 				for (Tag t : tagDaos) {
 					String name = t.getName();
-					if (!tagNames.contains(name)) {
+					Integer i = tagCounts.get(name);
+					if(i == null) {
+						tagCounts.put(name, 1);
 						tagNames.add(name);
+					} else {
+						tagCounts.put(name, i+1);
 					}
 				}
 
@@ -246,7 +253,16 @@ public class RequestHandler extends HttpServlet {
 						builder.append(",");
 					builder.append("\"" + tagNames.get(i) + "\"");
 				}
-				builder.append("]");
+				builder.append("],");
+				builder.append("\"count\":");
+				builder.append("{");
+				for (int i = 0; i < tagNames.size(); ++i) {
+					if (i > 0)
+						builder.append(",");
+					builder.append("\"" + tagNames.get(i) + "\":");
+					builder.append("\"" + tagCounts.get(tagNames.get(i)) + "\"");
+				}
+				builder.append("}");
 				builder.append("}");
 				response.getWriter().println(builder.toString());
 			} else {
