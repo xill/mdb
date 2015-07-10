@@ -12,26 +12,31 @@ body {
 }
 
 .topBar {
-	position : relative;
+	position: relative;
 	height: 60px;
-	background-color: rgb(10,10,150);
-	color : white;
-	box-shadow: 0 4px 2px -2px gray;
-	width: 90%;
-	margin-left: 5%;
-	border-radius: 0px 0px 10px 10px;
-	margin-bottom: 20px;
+	color: white;
+	width: 100%;
+	border: solid #000;
+	border-width: 0px 0px 2px;
 }
 
 .topBar #backLink {
 	position : absolute;
 }
 
+.topBar #chapterSelectLabel {
+	position: absolute;
+	top: 10px;
+	left: 10px;
+	height: 1em;
+	line-height: 1em;
+}
+
 .topBar #dropMenu {
 	position: absolute;
-	right: 4%;
-	bottom: 10px;
-	width: 15%;
+	right: 15px;
+	top: 11px;
+	width: 20em;
 	height: 1.5em;
 	font-size: 0.8em;
 }
@@ -51,13 +56,13 @@ body {
 
 .topBar .fsButton {
 	position: absolute;
-	right: 1%;
-	bottom: 13.5px;
+	right : 7px;
+	bottom : 5px;
 }
 
 .topBar .fsButton img {
-	width : 35px;
-	height : 35px;
+	width : 50px;
+	height : 50px;
 }
 
 
@@ -86,4 +91,35 @@ body {
 
 .topBar a:active {
     color: #FFF;
+}
+
+.topBar #menuBtn {
+	width: 60px;
+	height: 60px;
+	background-color: rgb(10,10,150);
+	position : absolute;
+}
+
+.topBar #menuImg {
+	position : absolute;
+	width: 60px;
+	height: 60px;
+}
+
+.topBar #menuDrop {
+	display: none;
+	position: absolute;
+	width: 400px;
+	height: 200px;
+	left: 0px;
+	top: 62px;
+	background-color: rgb(10, 10, 150);
+	z-index: 1;
+}
+
+.topBar #menuDrop hr {
+	position: absolute;
+	top: 6em;
+	width: 90%;
+	left: 5%;
 }

@@ -161,7 +161,7 @@ public class RegistryParser {
 						// get pages and sort them.
 						String[] pageListing = chapterFolder.list();
 						List<String> pL = Arrays.asList(pageListing);
-						Collections.sort(pL, new NaturalComparator());
+						Collections.sort(pL, new NaturalComparator<String>());
 						pageListing = pL.toArray(new String[]{});
 						// go through pages
 						for( String pageName : pageListing ) {

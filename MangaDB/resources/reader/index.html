@@ -12,24 +12,27 @@
 <body>
 
 <div class="topBar">
-	<a id="backLink" href=""><img id="backIcon" src="../images/back.png"></img></a>
-	<div class="linkContainer">
-		<span class="active"><a href="/directory/">Directory</a></span>
-		<span><a href="/directory/?mode=tags">Tags</a></span>
-		<span><a href="/search">Search</a></span>
+	<div id="menuBtn">
+		<img id="menuImg" src="../images/menu.png"></img>
 	</div>
-	<div id="plainModeButton" title="Plain no scale mode" class="modeButton active">P</div>
-	<div id="largeModeButton" title="Scale as large as possible" class="modeButton">L</div>
-	<div id="fitModeButton" title="Scale to fit without scrolling" class="modeButton">F</div>
-	<div class="fsButton"><img id="fsIcon" src="../images/enterfs.png"></div>
-	<div class="prevButton"><img id="prevIcon" src="../images/prevPage.png"></div>
+	<div id="menuDrop">
+		<span id="chapterSelectLabel">Chapters: </span>
+		<select id="dropMenu">
+		</select>
+		<div class="prevButton"><img id="prevIcon" src="../images/prevPage.png"></div>
+		<div class="nextButton"><img id="nextIcon" src="../images/nextPage.png"></div>
+		<hr/>
+		<span id="readerDirLink" class="active"><a href="/directory/">Directory</a></span>
+		<span id="readerTagLink"><a href="/directory/?mode=tags">Tags</a></span>
+		<span id="readerSearchLink"><a href="/search">Search</a></span>
+	</div>
+	
+	<div id="rightSideFill"></div>
 	<nav id="pageScroll">
 		<ul id="pageScrollContainer">
 		</ul>
 	</nav>
-	<div class="nextButton"><img id="nextIcon" src="../images/prevPage.png"></div>
-	<select id="dropMenu">
-	</select>
+	<div class="fsButton"><img id="fsIcon" src="../images/enterfs.png"></div>
 </div>
 
 <div class="pageCounter"></div>

@@ -2,10 +2,12 @@ package com.xill.mangadb.util;
 
 import java.util.Comparator;
 
-public class NaturalComparator implements Comparator<String> {
-
+public class NaturalComparator<T> implements Comparator<T> {
+	
 	@Override
-	public int compare(String strA, String strB) {
+	public int compare(T baseValA, T baseValB) {
+		String strA = baseValA.toString();
+		String strB = baseValB.toString();
 
 		// character index
 		int indA = 0;

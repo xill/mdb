@@ -65,6 +65,7 @@ $(document).ready(function(){
 
 // set chapter select dropdown.
 function showChapters() {
+	
 	var topMenuDrop = $("#dropMenu");
 	var data = seriesData.chapters;
 	
@@ -104,6 +105,11 @@ function showReader() {
 	var eventKey = "click";
 	prevPageDiv.bind(eventKey,previousPage);
 	nextPageDiv.bind(eventKey,nextPage);
+	
+	var menuBtn = $("#menuBtn");
+	menuBtn.bind("click",function(){
+		toggleMenu();
+	});
 	
 	var fsButton = $(".fsButton");
 	var fsIcon = $("#fsIcon");
@@ -258,6 +264,19 @@ function showReader() {
 	// finalize view.
 	goToPage();
 	fitReader();
+}
+
+function toggleMenu() {
+	var menuDrop = $("#menuDrop");
+	var menuImg = $("#menuImg");
+	var isVisible = menuDrop.is(":visible");
+	if(isVisible) {
+		menuDrop.hide();
+		menuImg.css("transform","");
+	} else {
+		menuDrop.show();
+		menuImg.css("transform","rotate(90deg)");
+	}
 }
 
 function toMode( modeId ) {

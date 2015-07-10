@@ -178,7 +178,10 @@ public class Series {
 					newOrder.add(i);
 				}
 			}
-			newOrder.addAll(nameToKey.values());
+			// add all remaining to the end in original order.
+			List<Integer> remaining = new ArrayList<Integer>(nameToKey.values()); 
+			Collections.sort(remaining, new NaturalComparator<Integer>());
+			newOrder.addAll(remaining);
 			
 		} 
 		// order by natural order.
@@ -186,7 +189,7 @@ public class Series {
 			// perform a natural sort on name listing.
 			List<String> cL = new ArrayList<String>(nameToKey.size());
 			for(String s : nameToKey.keySet()) cL.add(s);
-			Collections.sort(cL, new NaturalComparator());
+			Collections.sort(cL, new NaturalComparator<String>());
 			
 			for( String o : cL ) {
 				Integer i = nameToKey.remove(o);
@@ -195,7 +198,9 @@ public class Series {
 				}
 			}
 			// add all remaining to the end in original order.
-			newOrder.addAll(nameToKey.values());
+			List<Integer> remaining = new ArrayList<Integer>(nameToKey.values()); 
+			Collections.sort(remaining, new NaturalComparator<Integer>());
+			newOrder.addAll(remaining);
 		}
 		
 		StringBuilder orderBuilder = new StringBuilder();
