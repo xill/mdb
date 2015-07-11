@@ -180,3 +180,22 @@
 	top: 4.5em;
 	right: 0.5em;
 }
+
+#readerChapterLink
+{
+	position: absolute;
+	color: black;
+	left: 80px;
+	font-size: 1.5em;
+}
+
+#readerChapterLink a
+{
+	color: black;
+}
+
+#readerChapterLink a:visited
+{
+	color: black;
+}
+

@@ -20,10 +20,6 @@ body {
 	border-width: 0px 0px 2px;
 }
 
-.topBar #backLink {
-	position : absolute;
-}
-
 .topBar #chapterSelectLabel {
 	position: absolute;
 	top: 10px;
@@ -34,8 +30,8 @@ body {
 
 .topBar #dropMenu {
 	position: absolute;
-	right: 15px;
-	top: 11px;
+	right: 1em;
+	top: 0.9em;
 	width: 20em;
 	height: 1.5em;
 	font-size: 0.8em;
@@ -62,7 +58,8 @@ body {
 
 
 .topBar span {
-	font-size : 20px;
+	/*font-size : 20px;*/
+	font-size : 1.25em;
 	line-height : 60px;
 	margin-right : 10px;
 }
@@ -104,8 +101,8 @@ body {
 .topBar #menuDrop {
 	display: none;
 	position: absolute;
-	width: 400px;
-	height: 200px;
+	width: 25em;
+	height: 12.5em;
 	left: 0px;
 	top: 62px;
 	background-color: rgb(10, 10, 150);

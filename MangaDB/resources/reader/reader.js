@@ -57,7 +57,7 @@ $.ajax({
 
 $(document).ready(function(){
 	// set back button href
-	$("#backLink").attr("href","/chapters/?name="+seriesName)
+	$("#readerChapterLink").find("a").attr("href","/chapters/?name="+seriesName);
 	
 	if(seriesData) showChapters();
 	if(chapterData) showReader();
@@ -68,6 +68,7 @@ function showChapters() {
 	
 	var topMenuDrop = $("#dropMenu");
 	var data = seriesData.chapters;
+	$("#readerChapterLink").find("a").text(seriesData.names[0]);
 	
 	for( var i = 0; i < data.length ; ++i ) {
 		topMenuDrop.append($('<option value="'+ data[i].name +'">' + data[i].name + '</option>'));

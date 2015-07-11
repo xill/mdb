@@ -32,6 +32,16 @@ function setupBaseTopbarFunctionality() {
 			fsIcon.attr("src","../images/exitfs.png");
 		}
 	});
+	
+	// topbar resize function
+	var resizeFunc = function() {
+		var fs = (window.innerWidth/400 * 16);
+		if(fs > 16) fs = 16;
+		$("#menuDrop").css("font-size",fs+"px");
+	};
+	
+	$(window).bind("resize",resizeFunc);
+	resizeFunc();
 }
 
 function toggleMenu() {
