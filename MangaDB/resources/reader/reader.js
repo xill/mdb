@@ -377,7 +377,8 @@ function goToPage() {
  * scroll up animation performed on page change.
  */
 function scrollUp() {
-	$("html, body").animate({ scrollTop: "0px" });
+	var scrollTo = (window.pageYOffset > 60) ? 62 : 0;
+	$("html, body").animate({ scrollTop: scrollTo+"px" });
 }
 
 // helper function for building page url.
