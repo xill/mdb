@@ -5,6 +5,7 @@ var chapterData = undefined;
 var seriesData = undefined;
 var pageIndex = 0;
 var readerView = undefined;
+var lock = true; 
 
 var layout = -1;
 var LAYOUT_STANDARD = 0;
@@ -27,40 +28,37 @@ if(window.location.hash) {
 }
 if(!chapterNumber) chapterNumber = 0;
 
-// get current chapter data
-$.ajax({
-	"url" : "/api/series/"+seriesName+"/"+chapterNumber,
-	"dataType" : "json",
-	"success" : function(resp) {
-		console.log(resp);
-		chapterData = resp;
-		// no chapter to show. redirect back to chapters view.
-		if(!chapterData.pages || chapterData.pages.length == 0) {
-			window.location.href = "/chapters/?name="+seriesName;
-		}
-		
-		if(document.readyState == 'complete') showReader();
-	}
-});
-
-// get overall series chapters data.
-$.ajax({
-	"url" : "/api/series/"+seriesName,
-	"dataType" : "json",
-	"success" : function(resp) {
-		console.log(resp);
-		seriesData = resp;
-		
-		if(document.readyState == 'complete') showChapters();
-	}
-});
-
 $(document).ready(function(){
 	// set back button href
 	$("#readerChapterLink").find("a").attr("href","/chapters/?name="+seriesName);
 	
-	if(seriesData) showChapters();
-	if(chapterData) showReader();
+	// get current chapter data
+	$.ajax({
+		"url" : "/api/series/"+seriesName+"/"+chapterNumber,
+		"dataType" : "json",
+		"success" : function(resp) {
+			console.log(resp);
+			chapterData = resp;
+			// no chapter to show. redirect back to chapters view.
+			if(!chapterData.pages || chapterData.pages.length == 0) {
+				window.location.href = "/chapters/?name="+seriesName;
+			}
+			
+			showReader();
+		}
+	});
+
+	// get overall series chapters data.
+	$.ajax({
+		"url" : "/api/series/"+seriesName,
+		"dataType" : "json",
+		"success" : function(resp) {
+			console.log(resp);
+			seriesData = resp;
+			
+			showChapters();
+		}
+	});
 });
 
 // set chapter select dropdown.
@@ -166,6 +164,8 @@ function showReader() {
 			// determine what was clicked.
 			var t = (ev) ? $(ev).text() : undefined;
 			if(t) {
+				if(lock) return;
+				lock = true;
 				pageIndex = parseInt(t)-1;
 				goToPage();
 			}
@@ -324,6 +324,9 @@ function fitReader( imgW , imgH ) {
 
 // progress to next page
 function nextPage() {
+	if(lock) return;
+	lock = true;
+	
 	pageIndex++;
 	if(pageIndex >= chapterData.pages.length) {
 		// redirect to next chapter.
@@ -336,6 +339,9 @@ function nextPage() {
 
 // progress to previous page
 function previousPage() {
+	if(lock) return;
+	lock = true;
+	
 	pageIndex--;
 	if(pageIndex < 0) {
 		if(chapterNumber > 0) {
@@ -360,6 +366,7 @@ function goToPage() {
 		scrollUp();
 		window.location.hash = "#"+pageIndex;
 		spinner.hide();
+		lock = false;
 	}
 	img.src = pageUrl;
 	
