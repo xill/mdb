@@ -49,6 +49,7 @@ body {
 	position: absolute;
 	right : 7px;
 	bottom : 5px;
+	z-index : 2;
 }
 
 .topBar .fsButton img {
@@ -90,6 +91,7 @@ body {
 	height: 60px;
 	background-color: rgb(10,10,150);
 	position : absolute;
+	z-index : 2;
 }
 
 .topBar #menuImg {
@@ -106,7 +108,7 @@ body {
 	left: 0px;
 	top: 62px;
 	background-color: rgb(10, 10, 150);
-	z-index: 1;
+	z-index: 2;
 }
 
 .topBar #menuDrop hr {
@@ -114,4 +116,15 @@ body {
 	top: 6em;
 	width: 90%;
 	left: 5%;
+}
+
+#popupMouseEater {
+	position : fixed;
+	left : 0px;
+	top : 0px;
+	width : 100%;
+	height : 100%;
+	background-color : rgba(200,0,0,0.5);
+	display:none;
+	z-index: 1;
 }

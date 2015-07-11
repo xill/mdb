@@ -19,6 +19,11 @@ function setupBaseTopbarFunctionality() {
 		toggleMenu();
 	});
 	
+	var popupMouseEater = $("#popupMouseEater");
+	popupMouseEater.bind("click",function(){
+		toggleMenu();
+	});
+	
 	var fsButton = $(".fsButton");
 	var fsIcon = $("#fsIcon");
 	fsButton.bind("click",function(){
@@ -47,13 +52,16 @@ function setupBaseTopbarFunctionality() {
 function toggleMenu() {
 	var menuDrop = $("#menuDrop");
 	var menuImg = $("#menuImg");
+	var popupMouseEater = $("#popupMouseEater");
 	var isVisible = menuDrop.is(":visible");
 	if(isVisible) {
 		menuDrop.hide();
 		menuImg.css("transform","");
+		popupMouseEater.hide();
 	} else {
 		menuDrop.show();
 		menuImg.css("transform","rotate(90deg)");
+		popupMouseEater.show();
 	}
 }
 
