@@ -41,11 +41,6 @@ body {
 	font-size: 0.8em;
 }
 
-.linkContainer {
-	position: absolute;
-	left: 200px;
-}
-
 .topBar #backIcon {
 	width: 65px;
 	height: 50px;

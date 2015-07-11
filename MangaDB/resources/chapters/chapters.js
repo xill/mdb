@@ -89,4 +89,6 @@ function showSeriesData() {
 	else {
 	
 	}
+	
+	setupBaseTopbarFunctionality();
 }

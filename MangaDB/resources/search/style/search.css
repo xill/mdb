@@ -33,3 +33,36 @@ input {
 	margin-left: auto;
 	margin-right: auto;
 }
+
+#rightSideFill
+{
+	position: absolute;
+	background-color: rgb(10,10,150);
+	height: 100%;
+	width: 65px;
+	right: 0px;
+}
+
+#readerDirLink
+{
+	position: absolute;
+	top: 0.5em;
+	left: 1em;
+	font-size: 2em;
+}
+
+#readerTagLink
+{
+	position: absolute;
+	top: 0.5em;
+	left: 7em;
+	font-size: 2em;
+}
+
+#readerSearchLink
+{
+	position: absolute;
+	top: 2.5em;
+	left: 1em;
+	font-size: 2em;
+}

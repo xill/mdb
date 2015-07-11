@@ -70,6 +70,8 @@ function showSearchResults() {
 			searchResults.append($('<div><a href="/chapters/?name='+data[i]+'">'+data[i]+'</a></div>'));
 		}
 	}
+	
+	setupBaseTopbarFunctionality();
 }
 
 function onSearch() {
