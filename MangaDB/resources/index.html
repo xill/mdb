@@ -1,9 +1,105 @@
 <html>
 <head>
+	<title>MangaDB Reader</title>
+	<meta http-equiv="content-type" content="text/html; charset=UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+	<script type="text/javascript" src="../lib/jquery.js"></script>
+	<style>
+		* { margin : 0px; padding : 0px; }
+		html, body { width : 100%; height : 100%; overflow:hidden; }
+		iframe {
+			width : 100%;
+			height : 100%;
+		}
+	</style>
 	<script type="text/javascript">
-		window.location.href = "/directory"
+		
+		/**
+		 * @return {Object} - object with all url parameters.
+		 */
+		function getParameters() {
+			// prep the param string
+			var params = window.location.search;
+			params = params.substring(1,params.length);
+			
+			// gather all parameter sets.
+			var paramList = [];
+			var prev = -1;
+			var ch = params.indexOf("&",prev+1);
+			while(ch != -1) {
+				var subStr = params.substring(prev+1,ch);
+				paramList.push(subStr);
+				prev = ch;
+				ch = params.indexOf("&",prev+1);
+				console.log(subStr);
+			};
+			paramList.push(params.substring(prev+1,params.length));
+
+			// split parameter sets to keys and values.
+			var paramSet = {};
+			for ( var i = 0 ; i < paramList.length; ++i ) {
+				var str = paramList[i];
+				var ind = str.indexOf("=");
+				if(ind==-1) continue;
+				
+				var key = str.substring(0,ind);
+				var value = str.substring(ind+1,str.length);
+				paramSet[key] = value;
+			}
+			
+			// return object with keys and values.
+			return paramSet;
+		}
+		
+		window.onload = function() {
+			var frame = $("iframe");
+			// triggered when iframe changes url.
+			frame.load(function(){
+				// copy iframe url to the page main navigation bar.
+				history.pushState({},null,frame[0].contentWindow.location.href);
+			});
+			// triggered when iframe changes hash.
+			$(frame[0].contentWindow).on("hashchange",function(){
+				// copy iframe hash to the page main navigation bar.
+				window.location.hash = frame[0].contentWindow.location.hash;
+			});
+		};
 	</script>
 </head>
 <body>
+	<script type="text/javascript">
+		// get all url parameters.
+		var params = getParameters();
+
+		// get url and hash parameters.
+		var url = params.url;
+		delete params.url;
+		var hash = params.hash;
+		delete params.hash;
+		
+		// set default url to show directory view.
+		if(!url) {
+			url = "/directory";
+		}
+		
+		// build final url with parameters and hash.
+		var first = true;
+		for( var k in params ) {
+			if(first) {
+				if(url.indexOf("?") == -1) url += "?";
+				else url += "&";
+				first = false;
+			}
+			else url += "&";
+			
+			url += k + "=" + params[k];
+		}
+		if(hash) url += "#"+hash;
+		
+		// write iframe to document with built url.
+		document.write('<iframe src="'+url+'"></iframe>');
+		// update page navigation bar to reflect iframe url.
+		history.pushState({},null,url);
+	</script>
 </body>
 </html>

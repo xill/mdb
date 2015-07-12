@@ -1,3 +1,14 @@
+/* generic functionality. */
+
+// redict correctly if this is not an iframed.
+if(self==top) {
+	var url = window.location.protocol + "//" + window.location.host + "/?url=" + window.location.pathname + window.location.search;
+	if(window.location.hash) url += "&hash="+window.location.hash.replace("#","");
+	window.location.href = url;
+}
+
+/* helper functions */
+
 function gup( name, url ) {
 	if (!url) url = location.href
 	name = name.replace(/[\[]/,"\\\[").replace(/[\]]/,"\\\]");
@@ -66,10 +77,9 @@ function toggleMenu() {
 }
 
 function toggleFullScreen( elem ) {
-	
-	if(!elem) elem = document.documentElement;
-	if (!document.fullscreenElement &&    // alternative standard method
-		!document.mozFullScreenElement && !document.webkitFullscreenElement && !document.msFullscreenElement ) {  // current working methods
+	if(!elem) elem = parent.document.documentElement;
+	if (!parent.document.fullscreenElement &&    // alternative standard method
+		!parent.document.mozFullScreenElement && !parent.document.webkitFullscreenElement && !parent.document.msFullscreenElement ) {  // current working methods
 		if (elem.requestFullscreen) {
 			elem.requestFullscreen();
 		} else if (elem.msRequestFullscreen) {
@@ -80,14 +90,14 @@ function toggleFullScreen( elem ) {
 			elem.webkitRequestFullscreen(Element.ALLOW_KEYBOARD_INPUT);
 		}
 	} else {
-		if (document.exitFullscreen) {
-			document.exitFullscreen();
-		} else if (document.msExitFullscreen) {
-			document.msExitFullscreen();
+		if (parent.document.exitFullscreen) {
+			parent.document.exitFullscreen();
+		} else if (parent.document.msExitFullscreen) {
+			parent.document.msExitFullscreen();
 		} else if (document.mozCancelFullScreen) {
-			document.mozCancelFullScreen();
+			parent.document.mozCancelFullScreen();
 		} else if (document.webkitExitFullscreen) {
-			document.webkitExitFullscreen();
+			parent.document.webkitExitFullscreen();
 		}
 	}
 }
