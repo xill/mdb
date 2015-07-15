@@ -11,6 +11,7 @@ import org.eclipse.jetty.webapp.WebAppContext;
  * This is a hack to get the default servlet to not use file mapping buffers when serving files. The effect is that
  * Jetty reloads the file on every read but it also does not lock the file which is good for development.
  */
+// FIXME : stopped working for some reason...
 public class DisableFileMappedBufferConfiguration extends AbstractConfiguration {
     @Override
     public void configure(WebAppContext context) throws Exception {

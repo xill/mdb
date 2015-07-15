@@ -5,10 +5,10 @@ import org.codehaus.jettison.json.JSONObject;
 public class StringUtil {
 
 	/**
-	 * TODO
+	 * Sort string array.
 	 * 
-	 * @param array
-	 * @return
+	 * @param array - array to sort.
+	 * @return - sorted array.
 	 */
 	public static String[] sort(String[] array) {
 		String temp;
@@ -27,11 +27,11 @@ public class StringUtil {
 	}
 	
 	/**
-	 * TODO
+	 * String contains function which ignores letter case.
 	 * 
 	 * @param compareA
 	 * @param compareB
-	 * @return
+	 * @return - true if B contains A. false otherwise.
 	 */
 	public static boolean containsIgnoreCase( String compareA , String compareB ) {
 		if(compareA == null) throw new NullPointerException();
@@ -44,10 +44,10 @@ public class StringUtil {
 	}
 	
 	/**
-	 * TODO
+	 * Add json quotes to string
 	 * 
-	 * @param value
-	 * @return
+	 * @param value - string to modify
+	 * @return - modified string.
 	 */
 	public static String toValidJsonValue(String value) {
 		return JSONObject.quote(value);

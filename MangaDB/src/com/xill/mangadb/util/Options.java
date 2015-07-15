@@ -7,6 +7,9 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.util.Properties;
 
+/**
+ * General mangadb properties wrapper class.
+ */
 public class Options {
 
 	private static String propertyFileName = "mangadb.properties";
@@ -14,6 +17,9 @@ public class Options {
 	
 	public static String REGISTRY_URL = "registryUrl";
 	
+	/**
+	 * Load properties file data.
+	 */
 	public static void load() {
 		properties = new Properties();
 		try {
@@ -28,6 +34,9 @@ public class Options {
 		}
 	}
 	
+	/**
+	 * Save properties data to file.
+	 */
 	public static void save() {
 		try {
 			FileOutputStream os = new FileOutputStream(new File(propertyFileName));

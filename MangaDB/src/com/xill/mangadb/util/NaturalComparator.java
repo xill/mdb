@@ -2,6 +2,11 @@ package com.xill.mangadb.util;
 
 import java.util.Comparator;
 
+/**
+ * Collections comparator for natural ordering for integers and strings.
+ * 
+ * @param <T>
+ */
 public class NaturalComparator<T> implements Comparator<T> {
 	
 	@Override

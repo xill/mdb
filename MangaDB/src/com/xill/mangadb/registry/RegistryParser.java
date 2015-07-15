@@ -22,6 +22,9 @@ import com.xill.mangadb.db.Thumbnail;
 import com.xill.mangadb.util.NaturalComparator;
 import com.xill.mangadb.util.Options;
 
+/**
+ * Parser for existing file structures.
+ */
 public class RegistryParser {
 
 	private List<Series> seriesRegistry = null;

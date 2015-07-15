@@ -4,6 +4,9 @@ import java.sql.SQLException;
 
 import com.j256.ormlite.jdbc.JdbcConnectionSource;
 
+/**
+ * Desktop x86 database controller wrapper.
+ */
 public class X86DatabaseControl extends DatabaseControl {
 
 	public X86DatabaseControl()

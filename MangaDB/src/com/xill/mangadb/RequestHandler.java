@@ -24,6 +24,9 @@ import com.xill.mangadb.db.SeriesName;
 import com.xill.mangadb.db.Tag;
 import com.xill.mangadb.util.StringUtil;
 
+/**
+ * Server api handler class.
+ */
 public class RequestHandler extends HttpServlet {
 
 	/**
@@ -143,6 +146,7 @@ public class RequestHandler extends HttpServlet {
 		}
 
 		System.out.println(s);
+		// build search response.
 		if (s != null && s.size() > 0) {
 			StringBuilder builder = new StringBuilder();
 			builder.append("{");
@@ -167,12 +171,14 @@ public class RequestHandler extends HttpServlet {
 	private void handleGetAll(HttpServletRequest request,
 			HttpServletResponse response) throws ServletException, IOException {
 		List<Series> seriesSet = null;
+		// get data set of all series.
 		try {
 			seriesSet = DatabaseControl.get().getSeriesList();
 		} catch (SQLException e) {
 			e.printStackTrace();
 		}
 
+		// build response
 		if (seriesSet != null) {
 			StringBuilder builder = new StringBuilder();
 			builder.append("{");
@@ -269,7 +275,9 @@ public class RequestHandler extends HttpServlet {
 				response.getWriter().println("{}");
 			}
 
-		} else {
+		} 
+		// get results from a tag search.
+		else {
 			String[] tags = shortQuery.split(",");
 			List<Series> s = null;
 			try {
@@ -303,6 +311,7 @@ public class RequestHandler extends HttpServlet {
 			HttpServletResponse response, String query)
 			throws ServletException, IOException {
 
+		// detemine series name and chapter number
 		String shortQuery = query.replace(API_GET_SERIES + "/", "");
 		String seriesName = null;
 		int chapterNumber = -1;
@@ -320,11 +329,8 @@ public class RequestHandler extends HttpServlet {
 
 		System.out.println("series name \"" + seriesName + "\"");
 		System.out.println("chapter number \"" + chapterNumber + "\"");
-		/*
-		 * System.out.println(shortQuery);
-		 * 
-		 * String[] splits = query.split("/"); = splits[splits.length-1];
-		 */
+		
+		// search series with name.
 		Series s = null;
 		try {
 			s = DatabaseControl.get().getSeriesByName(seriesName);
@@ -332,6 +338,7 @@ public class RequestHandler extends HttpServlet {
 			e.printStackTrace();
 		}
 
+		// build response
 		response.setContentType("application/json");
 		response.setStatus(HttpServletResponse.SC_OK);
 		if (s != null) {
@@ -358,6 +365,12 @@ public class RequestHandler extends HttpServlet {
 		}
 	}
 
+	/**
+	 * remove empty string from array
+	 * 
+	 * @param strings - array of string to trim
+	 * @return trimmed array
+	 */
 	private String[] removeRedundant(String... strings) {
 		List<String> out = new LinkedList<String>(Arrays.asList(strings));
 		Iterator<String> it = out.iterator();
