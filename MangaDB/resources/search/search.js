@@ -1,4 +1,9 @@
+/**
+ * Search view javascript file.
+ */
 
+
+// read search tags.
 var tags = gup("tags");
 var rawTags = tags;
 if(tags) tags = tags.split(",");
@@ -6,15 +11,19 @@ for( var i = 0 ; i < tags.length ; ++i ) {
 	tags[i] = decodeURIComponent(tags[i]);
 }
 
+// read search name
 var name = gup("name");
 if(!name) name = "";
 
+// read search author
 var authorName = gup("author");
 if(!authorName) authorName = "";
 
+// read search artist
 var artistName = gup("artist");
 if(!artistName) artistName = "";
 
+// data received from the server.
 var dataSet = undefined;
 var tagSet = undefined;
 
@@ -48,6 +57,9 @@ $.ajax({
 	}
 });
 
+/**
+ * Setup tag grid
+ */
 function buildTags() {
 	var gridParent = $(".checkbox-grid");
 	var data = tagSet.tags;
@@ -60,6 +72,9 @@ function buildTags() {
 	}
 }
 
+/**
+ * Show current search results.
+ */
 function showSearchResults() {
 	// searchResults
 	var searchResults = $(".searchResults");
@@ -71,9 +86,13 @@ function showSearchResults() {
 		}
 	}
 	
+	// setup topbar
 	setupBaseTopbarFunctionality();
 }
 
+/**
+ * Triggered on search button click.
+ */
 function onSearch() {
 
 	var nameFieldValue = $("#nameField").val();
@@ -87,6 +106,7 @@ function onSearch() {
 		if(tagBox.checked) nTags.push($(tagBox).val());
 	}
 
+	// reload this view with new search data.
 	window.location.href = location.protocol + '//' + location.host + location.pathname 
 	+ "?tags=" + nTags.join(",") + "&name=" + nameFieldValue + "&author=" + authorFieldValue + "&artist=" + artistFieldValue;
 }

@@ -1,17 +1,29 @@
+/**
+ * Reader javascript file
+ */
 
+// series name currently shown
 var seriesName = gup("name");
+// chapter number to show
 var chapterNumber = parseInt(gup("ch"));
+// current chapter data received from the server.
 var chapterData = undefined;
+// current series data received from the server.
 var seriesData = undefined;
+// current page shown.
 var pageIndex = 0;
+// main reader dom object.
 var readerView = undefined;
+// page change lock.
 var lock = true; 
 
+// view layout modes.
 var layout = -1;
 var LAYOUT_STANDARD = 0;
 var LAYOUT_LARGE = 1;
 var LAYOUT_FIT = 2;
 
+// set layout mode to localstorage if possible.
 if(typeof localStorage !== "undefined") {
 	try {
 		layout = parseInt(localStorage.getItem("layout"));
@@ -250,6 +262,11 @@ function showReader() {
 	fitReader();
 }
 
+/**
+ * Set reader mode
+ * 
+ * @param {integer} modeId - mode id to show
+ */
 function toMode( modeId ) {
 	if(modeId == layout) return;
 	layout = modeId;
@@ -279,8 +296,15 @@ function toMode( modeId ) {
 	}
 }
 
+/**
+ * adjust view to fit layout
+ * 
+ * @param {integer} imgW - image width to adjust.
+ * @param {integer} imgH - image height to adjust.
+ */
 function fitReader( imgW , imgH ) {
 
+	// reset size on other layouts.
 	if(layout == LAYOUT_STANDARD || layout == LAYOUT_LARGE) {
 		readerView.css({
 			"width":"",
@@ -355,6 +379,9 @@ function previousPage() {
 	goToPage();
 }
 
+/**
+ * Show page determined by "pageIndex"
+ */
 function goToPage() {
 	var pageUrl = buildPageUrl(pageIndex);
 	var img = new Image();

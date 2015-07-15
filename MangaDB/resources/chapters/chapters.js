@@ -1,7 +1,16 @@
-// TODO use ajax /api/<seriesname> to get series data
+/**
+ * Chapter view's main javascript file.
+ * 
+ * Chapter view shows general data for a specific series.
+ */
+
+
+/** {string} - name of the shown series. */
 var seriesName = gup("name");
+/** {object} - data of the shown series. */
 var seriesData = undefined;
 
+// request series data from the server.
 $.ajax({
 	"url" : "/api/series/"+seriesName,
 	"dataType" : "json",
@@ -20,12 +29,17 @@ $(document).ready(function(){
 	if(seriesData) showSeriesData();
 });
 
+/**
+ * Initialize and show series data.
+ * Called after series data is received from the server.
+ */
 function showSeriesData() {
 	// check if valid series
 	if(seriesData && seriesData.name) { 
 		$(".seriesName").text(seriesData.name); // TODO use one of the actual names.
 		var chapterList = $(".chapterList");
 		var chapters = seriesData.chapters;
+		// setup chapter links.
 		for( var i = 0 ; i < chapters.length; ++i ) {
 			var chapter = chapters[i];
 			var line = $('<a href="/reader/?name='+seriesName+'&ch='+i+'" class="chapterLine">' + chapter.name + '</a>');
@@ -35,14 +49,17 @@ function showSeriesData() {
 		
 		var tagList = $("#tagList");
 		var tagData = seriesData.tags;
+		// setup tag links.
 		for( var i = 0; i < tagData.length ; ++i ) {
 			var tagLink = $('<a href="/search/?tags='+tagData[i]+'">'+tagData[i]+'</a>');
 			tagList.append(tagLink);
 		}
 		
+		// set description text.
 		var descriptionField = $("#descriptionField");
 		descriptionField.text(seriesData.description);
 		
+		// set author and artist data and links.
 		var authorName = $(".authorName");
 		var authorValue = seriesData.author;
 		var artistValue = seriesData.artist;
@@ -60,6 +77,7 @@ function showSeriesData() {
 			}
 		}
 		
+		// set thumbnail image if available.
 		if(seriesData.thumbnail) {
 			var thumbnail = $("#thumbnail");
 			var img = new Image();
@@ -90,5 +108,6 @@ function showSeriesData() {
 	
 	}
 	
+	// initialize topbar
 	setupBaseTopbarFunctionality();
 }

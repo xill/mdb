@@ -1,11 +1,22 @@
+/**
+ * Directory views main javascript file.
+ * 
+ * Depending on the mode it can show tags or series.
+ */
+
 
 // full data set.
 var dataSet = undefined;
 
+// api command for series data.
 var SERIES_MODE = "/api/all";
+// api command for tag data.
 var TAGS_MODE = "/api/tags";
+
+// variable to determine which mode is used.
 var REGUEST_MODE = SERIES_MODE
 
+// read mode from url.
 if(gup("mode")=="tags") {
 	REGUEST_MODE = TAGS_MODE;
 }
@@ -34,12 +45,15 @@ function showDirectory() {
 	var nameToKey = {};
 
 	var data = undefined;
+	// setup data for tags.
 	if(REGUEST_MODE == TAGS_MODE) {
 		for(var i = 0 ; i < dataSet.tags.length; ++i) {
 			nameToKey[dataSet.tags[i]] = dataSet.tags[i];
 		}
 		data = dataSet.tags;
-	} else {
+	}
+	// setup data for series.
+	else {
 		var sNames = [];
 		for(var i = 0 ; i < dataSet.series.length; ++i) {
 			nameToKey[dataSet.series[i].names[0]] = dataSet.series[i].name;
@@ -67,6 +81,7 @@ function showDirectory() {
 	}
 	keys.sort();
 	
+	// set data links.
 	for(var i = 0; i < keys.length; ++i) {
 		var keyName = keys[i];
 		var keyValue = values[keyName];
@@ -82,6 +97,7 @@ function showDirectory() {
 		}
 	}
 	
+	// initialize topbar.
 	setupBaseTopbarFunctionality();
 }
 

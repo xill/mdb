@@ -9,6 +9,12 @@ if(self==top) {
 
 /* helper functions */
 
+/**
+ * Read url parameter
+ * 
+ * @param {String} name - name of the parameter
+ * @param {String} url - url to parse from. [optional]
+ */
 function gup( name, url ) {
 	if (!url) url = location.href
 	name = name.replace(/[\[]/,"\\\[").replace(/[\]]/,"\\\]");
@@ -18,23 +24,33 @@ function gup( name, url ) {
 	return results == null ? "" : results[1];
 }
 
+/**
+ * @return {boolean} - true if running on android device. false otherwise.
+ */
 function isAndroid() {
 	return navigator.userAgent.toLowerCase().indexOf("android") != -1;
 }
 
 /* shared topbar functionality */
 
+/**
+ * Initialize topbar in current view.
+ */
 function setupBaseTopbarFunctionality() {
+	
+	// set menu button click event.
 	var menuBtn = $("#menuBtn");
 	menuBtn.bind("click",function(){
 		toggleMenu();
 	});
 	
+	// set mouse eater click event.
 	var popupMouseEater = $("#popupMouseEater");
 	popupMouseEater.bind("click",function(){
 		toggleMenu();
 	});
 	
+	// set fullscreen button
 	var fsButton = $(".fsButton");
 	var fsIcon = $("#fsIcon");
 	fsButton.bind("click",function(){
@@ -55,11 +71,13 @@ function setupBaseTopbarFunctionality() {
 		if(fs > 16) fs = 16;
 		$("#menuDrop").css("font-size",fs+"px");
 	};
-	
 	$(window).bind("resize",resizeFunc);
 	resizeFunc();
 }
 
+/**
+ * Menu button toggle function
+ */
 function toggleMenu() {
 	var menuDrop = $("#menuDrop");
 	var menuImg = $("#menuImg");
@@ -76,6 +94,11 @@ function toggleMenu() {
 	}
 }
 
+/**
+ * Fullscreen button toggle function
+ * 
+ * @param {DomElement} elem - element to fullscreen. [optional]
+ */
 function toggleFullScreen( elem ) {
 	if(!elem) elem = parent.document.documentElement;
 	if (!parent.document.fullscreenElement &&    // alternative standard method
