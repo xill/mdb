@@ -113,7 +113,7 @@
 	position: absolute;
 	height: 2em;
 	width: 8em;
-	top: 2.8em;
+	top: 5.2em;
 	left: 3em;
 }
 
@@ -128,7 +128,7 @@
 	position: absolute;
 	height: 2em;
 	width: 8em;
-	top: 2.8em;
+	top: 5.2em;
 	left: 14em;
 }
 
@@ -167,40 +167,50 @@
 #readerDirLink
 {
 	position: absolute;
-	top: 4.5em;
+	top: 6em;
 	left: 1em;
 }
 
 #readerTagLink
 {
 	position: absolute;
-	top: 4.5em;
+	top: 6em;
 	left: 6em;
 }
 
 #readerSearchLink
 {
 	position: absolute;
-	top: 4.5em;
+	top: 6em;
 	right: 0.5em;
 }
 
 #readerChapterLink
 {
 	position: absolute;
-	color: black;
-	left: 80px;
+	color: white;
+	left: 0px;
 	font-size: 1.5em;
 	z-index : 2;
+	line-height : 1.2em;
+	width : 100%;
+	text-align: center;
 }
 
 #readerChapterLink a
 {
-	color: black;
+	color: white;
 }
 
 #readerChapterLink a:visited
 {
-	color: black;
+	color: white;
 }
 
+#nameHr {
+	top : 2em;
+}
+
+#linkHr {
+	top : 8em;
+}
