@@ -9,6 +9,11 @@
 	user-select: none;
 }
 
+hr {
+	height : 1px;
+	background-color : white;
+}
+
 body {
 	font-family: "Helvetica Neue",Helvetica,Arial,sans-serif
 }

@@ -206,23 +206,10 @@ function showReader() {
 		}
 	});
 	
-	// setup layout buttons
-	var plainModeBtn = $('#plainModeButton');
-	var largeModeBtn = $('#largeModeButton');
-	var fitModeBtn = $('#fitModeButton');
-	
-	plainModeBtn.bind("click",function(){
-		toMode(LAYOUT_STANDARD);
-		fitReader();
-	});
-	
-	largeModeBtn.bind("click",function(){
-		toMode(LAYOUT_LARGE);
-		fitReader();
-	});
-	
-	fitModeBtn.bind("click",function(){
-		toMode(LAYOUT_FIT);
+	$("#optionLayoutMenu").change(function(){
+		console.log($(this).val());
+		//console.log(this);
+		toMode($(this).val());
 		fitReader();
 	});
 	
@@ -274,25 +261,18 @@ function toMode( modeId ) {
 	if(typeof localStorage !== "undefined") {
 		localStorage.setItem("layout",""+layout);
 	}
-
+	
+	$("#optionLayoutMenu")[0].value = modeId;
+	
 	var container = $("#readerContainer");
 	container.removeClass("largeLayout");
 	container.removeClass("fitLayout");
-	
-	$('#plainModeButton').removeClass("active");
-	$('#largeModeButton').removeClass("active");
-	$('#fitModeButton').removeClass("active");
-	
-	if(layout == LAYOUT_STANDARD) {
-		$('#plainModeButton').addClass("active");
-	}
-	else if(layout == LAYOUT_LARGE) {
+
+	if(layout == LAYOUT_LARGE) {
 		container.addClass("largeLayout");
-		$('#largeModeButton').addClass("active");
 	}
 	else if(layout == LAYOUT_FIT) {
 		container.addClass("fitLayout");
-		$('#fitModeButton').addClass("active");
 	}
 }
 

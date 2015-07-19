@@ -50,6 +50,14 @@ function setupBaseTopbarFunctionality() {
 		toggleMenu();
 	});
 	
+	// button for showing options.
+	var readerOptionLink = $("#readerOptionLink");
+	readerOptionLink.bind("click",toggleOptions);
+	
+	// button for hiding options.
+	var optionBackBtn = $("#optionBackBtn");
+	optionBackBtn.bind("click",toggleOptions);
+	
 	// set fullscreen button
 	var fsButton = $(".fsButton");
 	var fsIcon = $("#fsIcon");
@@ -70,6 +78,7 @@ function setupBaseTopbarFunctionality() {
 		var fs = (window.innerWidth/400 * 16);
 		if(fs > 16) fs = 16;
 		$("#menuDrop").css("font-size",fs+"px");
+		$("#optionTab").css("font-size",fs+"px");
 	};
 	$(window).bind("resize",resizeFunc);
 	resizeFunc();
@@ -79,11 +88,13 @@ function setupBaseTopbarFunctionality() {
  * Menu button toggle function
  */
 function toggleMenu() {
+	var optionTab = $("#optionTab");
 	var menuDrop = $("#menuDrop");
 	var menuImg = $("#menuImg");
 	var popupMouseEater = $("#popupMouseEater");
 	var isVisible = menuDrop.is(":visible");
 	if(isVisible) {
+		optionTab.hide();
 		menuDrop.hide();
 		menuImg.css("transform","");
 		popupMouseEater.hide();
@@ -91,6 +102,21 @@ function toggleMenu() {
 		menuDrop.show();
 		menuImg.css("transform","rotate(90deg)");
 		popupMouseEater.show();
+	}
+}
+
+/**
+ * Options panel toggle function
+ */
+function toggleOptions() {
+	var optionTab = $("#optionTab");
+	if(optionTab.is(":visible")) {
+		// hide options and show menu.
+		optionTab.hide();
+	}
+	else {
+		// hide menu and show options.
+		optionTab.show();
 	}
 }
 

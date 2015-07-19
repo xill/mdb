@@ -197,6 +197,13 @@
 	text-align: center;
 }
 
+#readerOptionLink {
+	position: absolute;
+	top: 7.5em;
+	left: 1em;
+	cursor : pointer;
+}
+
 #readerChapterLink a
 {
 	color: white;
@@ -213,4 +220,62 @@
 
 #linkHr {
 	top : 8em;
+}
+
+/* options */
+
+#optionTab {
+	position : absolute;
+	height : 12.5em;
+	background-color: rgb(10, 10, 150);
+	width: 25em;
+	z-index: 2;
+	display : none;
+}
+
+#optionBackBtn {
+	position: absolute;
+	left: 1em;
+	top: 0.4em;
+	color: white;
+	font-size: 1em;
+	width: 3em;
+	border-style: solid;
+	border-width: 1px;
+	text-align: center;
+	cursor: pointer;
+	z-index: 1;
+}
+
+#optionLabel {
+	position: absolute;
+	width: 100%;
+	text-align: center;
+	color: white;
+	font-size: 1.5em;
+}
+
+#optionHr {
+	top: 2em;
+	left: 5%;
+	width: 90%;
+	height: 1px;
+	position: absolute;
+	font-size: 1em;
+	background-color: white;
+}
+
+#optionLayoutLabel {
+	position: absolute;
+	left: 5%;
+	top: 2.5em;
+	color: white;
+	font-size: 1em;
+}
+
+#optionLayoutMenu {
+	position: absolute;
+	right: 5%;
+	top: 3.2em;
+	width: 12em;
 }
