@@ -207,8 +207,6 @@ function showReader() {
 	});
 	
 	$("#optionLayoutMenu").change(function(){
-		console.log($(this).val());
-		//console.log(this);
 		toMode($(this).val());
 		fitReader();
 	});
@@ -261,7 +259,8 @@ function showReader() {
 		toMode(tmp);
 	}
 	// set large basic layout for mobile
-	else if(navigator.userAgent.toLowerCase().indexOf("mobile") != -1) {
+	else if(navigator.userAgent.toLowerCase().indexOf("mobile") != -1
+		|| navigator.userAgent.toLowerCase().indexOf("android") != -1) {
 		toMode(LAYOUT_LARGE);
 	}
 	// set standard basic layout for everyone else.
@@ -309,19 +308,19 @@ function toMode( modeId ) {
  */
 function fitReader( imgW , imgH ) {
 
-	// reset size on other layouts.
+	// reset reader
+	readerView.css({
+		"width":"",
+		"height":""
+	});
+
+	// just return on other layouts.
 	if(layout == LAYOUT_STANDARD || layout == LAYOUT_LARGE) {
-		readerView.css({
-			"width":"",
-			"height":""
-		});
 		return;
 	}
 
-	var topBar = $('.topBar');
-	var topbarSize = parseInt(topBar.css("height")) + parseInt(topBar.css("margin-bottom"));
 	var windowWidthLeft = window.innerWidth;
-	var windowHeightLeft = window.innerHeight - topbarSize;
+	var windowHeightLeft = window.innerHeight;
 	if(!imgW) imgW = readerView[0].width;
 	if(!imgH) imgH = readerView[0].height;
 	

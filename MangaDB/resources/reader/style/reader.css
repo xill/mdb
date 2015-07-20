@@ -199,9 +199,11 @@
 
 #readerOptionLink {
 	position: absolute;
-	top: 7.5em;
+	top: 8.5em;
 	left: 1em;
-	cursor : pointer;
+	cursor: pointer;
+	height: 1em;
+	line-height: 1em;
 }
 
 #readerChapterLink a
