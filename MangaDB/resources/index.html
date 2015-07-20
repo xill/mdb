@@ -57,7 +57,14 @@
 			frame.load(function(){
 				// copy iframe url to the page main navigation bar.
 				history.pushState({},null,frame[0].contentWindow.location.href);
+				
+				// triggered when iframe changes hash.
+				$(frame[0].contentWindow).on("hashchange",function(){
+					// copy iframe hash to the page main navigation bar.
+					window.location.hash = frame[0].contentWindow.location.hash;
+				});
 			});
+			
 			// triggered when iframe changes hash.
 			$(frame[0].contentWindow).on("hashchange",function(){
 				// copy iframe hash to the page main navigation bar.
