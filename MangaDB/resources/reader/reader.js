@@ -388,17 +388,27 @@ function previousPage() {
  * Show page determined by "pageIndex"
  */
 function goToPage() {
+	// build next page image url
 	var pageUrl = buildPageUrl(pageIndex);
-	var img = new Image();
+	// show spinner
 	var spinner = $('#spinnerIcon');
 	spinner.show();
+	// setup next page image.
+	var img = new Image();
 	img.onload = function() {
+		// show next page and remove spinner.
 		readerView.attr("src",img.src);
 		if(layout == LAYOUT_FIT) fitReader(img.width,img.height);
 		scrollUp();
 		window.location.hash = "#"+pageIndex;
 		spinner.hide();
 		lock = false;
+		
+		// preload next page
+		if(pageIndex+1 < chapterData.pages.length) {
+			var nextImg = new Image();
+			nextImg.src = buildPageUrl(pageIndex+1)
+		}
 	}
 	img.src = pageUrl;
 	
