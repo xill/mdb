@@ -279,3 +279,12 @@
 	top: 3.2em;
 	width: 12em;
 }
+
+#optionKeybindHelp {
+	position: absolute;
+	color: white;
+	top: 6em;
+	width: 90%;
+	left: 5%;
+	font-size: 0.8em;
+}

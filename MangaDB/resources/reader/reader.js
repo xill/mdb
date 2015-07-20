@@ -213,6 +213,31 @@ function showReader() {
 		fitReader();
 	});
 	
+	$(window).bind("keyup",function(e){
+
+		// right key
+		if(e.keyCode === 39) {
+			if(e.ctrlKey) {
+				window.location.href = "/reader/?name="+seriesName+"&ch="+(chapterNumber+1);
+			}
+			else {
+				pageIndex += 1;
+				goToPage();
+			}
+			
+		}
+		// left key
+		else if(e.keyCode === 37) {
+			if(e.ctrlKey) {
+				window.location.href = "/reader/?name="+seriesName+"&ch="+(chapterNumber-1);
+			}
+			else {
+				pageIndex -= 1;
+				goToPage();
+			}
+		}
+	});
+	
 	// chapter change buttons.
 	var prevButton = $('.prevButton');
 	var nextButton = $('.nextButton');
