@@ -53,6 +53,7 @@ function showSeriesData() {
 		for( var i = 0; i < tagData.length ; ++i ) {
 			var tagLink = $('<a href="/search/?tags='+tagData[i]+'">'+tagData[i]+'</a>');
 			tagList.append(tagLink);
+			tagList.html(tagList.html() + " ");
 		}
 		
 		// set description text.

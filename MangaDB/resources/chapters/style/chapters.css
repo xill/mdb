@@ -1,12 +1,81 @@
 /** css styles for chapter view. */
 
+body {
+	overflow-x : hidden;
+}
+
+.mobile .seriesName {
+	left: 3%;
+}
+
+.seriesName {
+	left: 2em;
+	position: relative;
+	top: 0%;
+}
+
+.mobile #authorField {
+	left: 8%;
+}
+
+#authorField {
+	left: 5em;
+	position: relative;
+	top: 0px;
+}
+
 .authorName {
 	display: inline-block
 }
 
+.mobile #tagList {
+	left: 8%;
+	width: 88%;
+}
+
+#tagList {
+	position: relative;
+	left: 5em;
+	top: 0.5em;
+	width: 32em;
+}
+
+.mobile #thumbnail {
+	display: none;
+}
+
 #thumbnail {
+	left: 40em;
+	top: 6em;
+	position: absolute;
 	background-size: 100%;
-	background-repeat : no-repeat;
+	background-repeat: no-repeat;
+}
+
+.mobile #descriptionField {
+	left: 3%;
+	width: 90%;
+}
+
+#descriptionField {
+	left: 3em;
+	position: relative;
+	top: 1em;
+	width: 32em;
+	border-style: solid;
+	border-width: 1px;
+	padding: 0.5em;
+}
+
+.mobile .chapterList {
+	left: 8%;
+}
+
+.chapterList {
+	position: relative;
+	top: 1.5em;
+	left: 5em;
+	padding-bottom: 0.5em;
 }
 
 #rightSideFill

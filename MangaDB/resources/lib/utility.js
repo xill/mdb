@@ -31,12 +31,20 @@ function isAndroid() {
 	return navigator.userAgent.toLowerCase().indexOf("android") != -1;
 }
 
+function isMobile() {
+	return navigator.userAgent.toLowerCase().indexOf("mobile") != -1;
+}
+
 /* shared topbar functionality */
 
 /**
  * Initialize topbar in current view.
  */
 function setupBaseTopbarFunctionality() {
+
+	if(isAndroid() || isMobile()) {
+		$("body").addClass("mobile");
+	}
 	
 	// set menu button click event.
 	var menuBtn = $("#menuBtn");
@@ -77,8 +85,7 @@ function setupBaseTopbarFunctionality() {
 	var resizeFunc = function() {
 		var fs = (window.innerWidth/400 * 16);
 		if(fs > 16) fs = 16;
-		$("#menuDrop").css("font-size",fs+"px");
-		$("#optionTab").css("font-size",fs+"px");
+		$("body").css("font-size",fs+"px");
 	};
 	$(window).bind("resize",resizeFunc);
 	resizeFunc();
