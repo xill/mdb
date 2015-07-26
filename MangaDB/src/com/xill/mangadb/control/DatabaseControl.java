@@ -12,6 +12,7 @@ import com.j256.ormlite.support.DatabaseConnection;
 import com.j256.ormlite.table.TableUtils;
 import com.xill.mangadb.db.Author;
 import com.xill.mangadb.db.Chapter;
+import com.xill.mangadb.db.ContentTag;
 import com.xill.mangadb.db.Page;
 import com.xill.mangadb.db.Series;
 import com.xill.mangadb.db.SeriesName;
@@ -38,6 +39,7 @@ public abstract class DatabaseControl {
 	protected Dao<Chapter, String> chaptersDao;
 	protected Dao<Page, String> pageDao;
 	protected Dao<Tag, String> tagDao;
+	protected Dao<ContentTag, String> contentTagDao;
 	protected Dao<Author, String> authorDao;
 	protected Dao<SeriesName, String> seriesNameDao;
 	protected Dao<Thumbnail, String> thumbnailDao;
@@ -70,6 +72,7 @@ public abstract class DatabaseControl {
 		// create table if required.
 		TableUtils.createTableIfNotExists(source, Author.class);
 		TableUtils.createTableIfNotExists(source, Tag.class);
+		TableUtils.createTableIfNotExists(source, ContentTag.class);
 		TableUtils.createTableIfNotExists(source, Page.class);
 		TableUtils.createTableIfNotExists(source, Chapter.class);
 		TableUtils.createTableIfNotExists(source, Thumbnail.class);
@@ -79,6 +82,7 @@ public abstract class DatabaseControl {
 		// instantiate the dao
 		authorDao = DaoManager.createDao(source, Author.class);
 		tagDao = DaoManager.createDao(source, Tag.class);
+		contentTagDao = DaoManager.createDao(source, ContentTag.class);
 		pageDao = DaoManager.createDao(source, Page.class);
 		chaptersDao = DaoManager.createDao(source, Chapter.class);
 		thumbnailDao = DaoManager.createDao(source, Thumbnail.class);
@@ -98,6 +102,8 @@ public abstract class DatabaseControl {
 		pageDao.setAutoCommit(pageConn, true);
 		DatabaseConnection tagConn = tagDao.startThreadConnection();
 		tagDao.setAutoCommit(tagConn, true);
+		DatabaseConnection contentTagConn = contentTagDao.startThreadConnection();
+		contentTagDao.setAutoCommit(contentTagConn, true);
 		DatabaseConnection authorConn = authorDao.startThreadConnection();
 		authorDao.setAutoCommit(authorConn, true);
 	}
@@ -246,6 +252,11 @@ public abstract class DatabaseControl {
 		for (Tag t : tags) {
 			setTag(t);
 		}
+		
+		Collection<ContentTag> cTags = dao.getContentTags();
+		for (ContentTag t : cTags) {
+			setContentTag(t);
+		}
 
 		Collection<Chapter> chapters = dao.getChapters();
 		for (Chapter c : chapters) {
@@ -368,6 +379,25 @@ public abstract class DatabaseControl {
 	 */
 	public void setTag(Tag dao) throws SQLException {
 		tagDao.createOrUpdate(dao);
+	}
+	
+	/**
+	 * @param id - id of the content tag to get.
+	 * @return - content tag found or null if not.
+	 * @throws SQLException
+	 */
+	public ContentTag getContentTag(String id) throws SQLException {
+		return contentTagDao.queryForId(id);
+	}
+
+	/**
+	 * Create or update content tag dao
+	 * 
+	 * @param dao - content tag dao to create or update.
+	 * @throws SQLException
+	 */
+	public void setContentTag(ContentTag dao) throws SQLException {
+		contentTagDao.createOrUpdate(dao);
 	}
 
 	/**

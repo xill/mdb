@@ -56,6 +56,16 @@ function showSeriesData() {
 			tagList.html(tagList.html() + " ");
 		}
 		
+		var contentTagList = $("#contentTagList");
+		var cTagData = seriesData.contentTags;
+		// setup content tag links.
+		for( var i = 0; i < cTagData.length ; ++i ) {
+			// TODO adjust link later
+			var tagLink = $('<a href="/search/?tags='+cTagData[i]+'">'+cTagData[i]+'</a>');
+			contentTagList.append(tagLink);
+			contentTagList.html(contentTagList.html() + " ");
+		}
+		
 		// set description text.
 		var descriptionField = $("#descriptionField");
 		descriptionField.text(seriesData.description);

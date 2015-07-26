@@ -35,6 +35,8 @@ public class Series {
 	@ForeignCollectionField
 	private Collection<Tag> tags = new ArrayList<Tag>();
 	@ForeignCollectionField
+	private Collection<ContentTag> contentTags = new ArrayList<ContentTag>();
+	@ForeignCollectionField
 	private Collection<SeriesName> seriesNames = new ArrayList<SeriesName>(); 
 	
 	@DatabaseField(foreign = true, foreignAutoRefresh = true, columnName = "author_id")
@@ -45,6 +47,7 @@ public class Series {
 	private Thumbnail thumbnail;
 	
 	public static final String KEY_TAGS = "tags";
+	public static final String KEY_CONTENT_TAGS = "content_tags";
 	public static final String KEY_AUTHOR = "author";
 	public static final String KEY_ARTIST = "artist";
 	public static final String KEY_DESCRIPTION = "description";
@@ -94,6 +97,15 @@ public class Series {
 	
 	public Collection<Tag> getTags() {
 		return tags;
+	}
+	
+	public void addContentTag(ContentTag cTag) {
+		cTag.addTaggedSeries(this);
+		contentTags.add(cTag);
+	}
+	
+	public Collection<ContentTag> getContentTags() {
+		return contentTags;
 	}
 	
 	public void addSeriesName(SeriesName name) {
@@ -314,6 +326,14 @@ public class Series {
 		for(int i = 0; i < tagList.size(); ++i) {
 			if(i >= 1) builder.append(",");
 			builder.append(StringUtil.toValidJsonValue(tagList.get(i).getName()));
+		}
+		builder.append("],");
+		builder.append("\"contentTags\":");
+		builder.append("[");
+		List<ContentTag> cTagList = new ArrayList<ContentTag>(contentTags);
+		for(int i = 0; i < cTagList.size(); ++i) {
+			if(i >= 1) builder.append(",");
+			builder.append(StringUtil.toValidJsonValue(cTagList.get(i).getName()));
 		}
 		builder.append("]");
 		builder.append("}");

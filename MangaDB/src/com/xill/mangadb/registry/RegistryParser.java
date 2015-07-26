@@ -14,6 +14,7 @@ import java.util.Properties;
 
 import com.xill.mangadb.db.Author;
 import com.xill.mangadb.db.Chapter;
+import com.xill.mangadb.db.ContentTag;
 import com.xill.mangadb.db.Page;
 import com.xill.mangadb.db.Series;
 import com.xill.mangadb.db.SeriesName;
@@ -82,6 +83,17 @@ public class RegistryParser {
 								Tag tagObj = new Tag();
 								tagObj.setName(tagName);
 								serie.addTag(tagObj);
+							}
+						}
+						// read content tags
+						String rawContentTags = (String) prop.get(Series.KEY_CONTENT_TAGS);
+						if(rawContentTags != null && rawContentTags.length() > 0) {
+							String[] tags = rawContentTags.split(",");
+							for( String tag : tags ) {
+								String tagName = tag.trim();
+								ContentTag tagObj = new ContentTag();
+								tagObj.setName(tagName);
+								serie.addContentTag(tagObj);
 							}
 						}
 						// read author
