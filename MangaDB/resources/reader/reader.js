@@ -209,6 +209,10 @@ function showReader() {
 	$("#optionLayoutMenu").change(function(){
 		toMode($(this).val());
 		fitReader();
+		
+		if(isAndroid() || isMobile()) {
+			exitFullScreen();
+		}
 	});
 	
 	$(window).bind("keyup",function(e){

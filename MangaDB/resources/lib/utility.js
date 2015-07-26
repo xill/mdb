@@ -136,24 +136,32 @@ function toggleFullScreen( elem ) {
 	if(!elem) elem = parent.document.documentElement;
 	if (!parent.document.fullscreenElement &&    // alternative standard method
 		!parent.document.mozFullScreenElement && !parent.document.webkitFullscreenElement && !parent.document.msFullscreenElement ) {  // current working methods
-		if (elem.requestFullscreen) {
-			elem.requestFullscreen();
-		} else if (elem.msRequestFullscreen) {
-			elem.msRequestFullscreen();
-		} else if (elem.mozRequestFullScreen) {
-			elem.mozRequestFullScreen();
-		} else if (elem.webkitRequestFullscreen) {
-			elem.webkitRequestFullscreen(Element.ALLOW_KEYBOARD_INPUT);
-		}
+		enterFullScreen(elem);
 	} else {
-		if (parent.document.exitFullscreen) {
-			parent.document.exitFullscreen();
-		} else if (parent.document.msExitFullscreen) {
-			parent.document.msExitFullscreen();
-		} else if (document.mozCancelFullScreen) {
-			parent.document.mozCancelFullScreen();
-		} else if (document.webkitExitFullscreen) {
-			parent.document.webkitExitFullscreen();
-		}
+		exitFullScreen();
+	}
+}
+
+function enterFullScreen(elem) {
+	if (elem.requestFullscreen) {
+		elem.requestFullscreen();
+	} else if (elem.msRequestFullscreen) {
+		elem.msRequestFullscreen();
+	} else if (elem.mozRequestFullScreen) {
+		elem.mozRequestFullScreen();
+	} else if (elem.webkitRequestFullscreen) {
+		elem.webkitRequestFullscreen(Element.ALLOW_KEYBOARD_INPUT);
+	}
+}
+
+function exitFullScreen() {
+	if (parent.document.exitFullscreen) {
+		parent.document.exitFullscreen();
+	} else if (parent.document.msExitFullscreen) {
+		parent.document.msExitFullscreen();
+	} else if (document.mozCancelFullScreen) {
+		parent.document.mozCancelFullScreen();
+	} else if (document.webkitExitFullscreen) {
+		parent.document.webkitExitFullscreen();
 	}
 }
