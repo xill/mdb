@@ -14,6 +14,7 @@ import java.util.Properties;
 
 import com.xill.mangadb.db.Author;
 import com.xill.mangadb.db.Chapter;
+import com.xill.mangadb.db.ChapterTag;
 import com.xill.mangadb.db.ContentTag;
 import com.xill.mangadb.db.Page;
 import com.xill.mangadb.db.Series;
@@ -68,7 +69,7 @@ public class RegistryParser {
 				Series serie = new Series();
 				serie.setName(seriesFolder.getName());
 				
-				// read stored property file
+				// read stored series property file
 				File serieProp = new File(registryLocation + File.separator + seriesName + File.separator + "series.properties");
 				if(serieProp.exists()) {
 					Properties prop = new Properties();
@@ -171,7 +172,29 @@ public class RegistryParser {
 					if(chapterFolder.isDirectory()) {
 						Chapter chapter = new Chapter();
 						chapter.setName(chapterFolder.getName());
-
+						
+						// read chapter props
+						File chapterProp = new File(registryLocation + File.separator + seriesName + File.separator + chapter.getName() + File.separator + "chapter.properties");
+						if(chapterProp.exists()) {
+							Properties prop = new Properties();
+							try {
+								prop.load(new FileReader(chapterProp));
+								
+								String rawChapterTags = (String) prop.getProperty(Chapter.KEY_CONTENT_TAGS);
+								if(rawChapterTags != null && rawChapterTags.length() > 0) {
+									String[] tags = rawChapterTags.split(",");
+									for( String tag : tags ) {
+										String tagName = tag.trim();
+										ChapterTag tagObj = new ChapterTag();
+										tagObj.setName(tagName);
+										chapter.addTag(tagObj);
+									}
+								}
+							} catch(Exception e) {
+								e.printStackTrace();
+							}
+						}
+						
 						chapterRegistry.add(chapter);
 						// get pages and sort them.
 						String[] pageListing = chapterFolder.list();
@@ -188,7 +211,9 @@ public class RegistryParser {
 							chapter.addPage(page);
 							pageRegistry.add(page);
 						}
+						
 						serie.addChapter(chapter);
+						chapter.saveProperties();
 					}
 				}
 				serie.setDefaults();

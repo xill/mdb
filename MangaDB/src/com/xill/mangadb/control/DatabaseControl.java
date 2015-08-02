@@ -12,6 +12,7 @@ import com.j256.ormlite.support.DatabaseConnection;
 import com.j256.ormlite.table.TableUtils;
 import com.xill.mangadb.db.Author;
 import com.xill.mangadb.db.Chapter;
+import com.xill.mangadb.db.ChapterTag;
 import com.xill.mangadb.db.ContentTag;
 import com.xill.mangadb.db.Page;
 import com.xill.mangadb.db.Series;
@@ -40,6 +41,7 @@ public abstract class DatabaseControl {
 	protected Dao<Page, String> pageDao;
 	protected Dao<Tag, String> tagDao;
 	protected Dao<ContentTag, String> contentTagDao;
+	protected Dao<ChapterTag, String> chapterTagDao;
 	protected Dao<Author, String> authorDao;
 	protected Dao<SeriesName, String> seriesNameDao;
 	protected Dao<Thumbnail, String> thumbnailDao;
@@ -73,6 +75,7 @@ public abstract class DatabaseControl {
 		TableUtils.createTableIfNotExists(source, Author.class);
 		TableUtils.createTableIfNotExists(source, Tag.class);
 		TableUtils.createTableIfNotExists(source, ContentTag.class);
+		TableUtils.createTableIfNotExists(source, ChapterTag.class);
 		TableUtils.createTableIfNotExists(source, Page.class);
 		TableUtils.createTableIfNotExists(source, Chapter.class);
 		TableUtils.createTableIfNotExists(source, Thumbnail.class);
@@ -83,6 +86,7 @@ public abstract class DatabaseControl {
 		authorDao = DaoManager.createDao(source, Author.class);
 		tagDao = DaoManager.createDao(source, Tag.class);
 		contentTagDao = DaoManager.createDao(source, ContentTag.class);
+		chapterTagDao = DaoManager.createDao(source, ChapterTag.class);
 		pageDao = DaoManager.createDao(source, Page.class);
 		chaptersDao = DaoManager.createDao(source, Chapter.class);
 		thumbnailDao = DaoManager.createDao(source, Thumbnail.class);
@@ -104,6 +108,8 @@ public abstract class DatabaseControl {
 		tagDao.setAutoCommit(tagConn, true);
 		DatabaseConnection contentTagConn = contentTagDao.startThreadConnection();
 		contentTagDao.setAutoCommit(contentTagConn, true);
+		DatabaseConnection chapterTagConn = chapterTagDao.startThreadConnection();
+		chapterTagDao.setAutoCommit(chapterTagConn, true);
 		DatabaseConnection authorConn = authorDao.startThreadConnection();
 		authorDao.setAutoCommit(authorConn, true);
 	}
@@ -286,6 +292,11 @@ public abstract class DatabaseControl {
 		for (Page p : pages) {
 			setPage(p);
 		}
+		
+		Collection<ChapterTag> tags = dao.getTags();
+		for (ChapterTag t : tags) {
+			setChapterTag(t);
+		}
 	}
 
 	/**
@@ -398,6 +409,25 @@ public abstract class DatabaseControl {
 	 */
 	public void setContentTag(ContentTag dao) throws SQLException {
 		contentTagDao.createOrUpdate(dao);
+	}
+	
+	/**
+	 * @param id - id of the chapter tag to get.
+	 * @return - content tag found or null if not.
+	 * @throws SQLException
+	 */
+	public ChapterTag getChapterTag(String id) throws SQLException {
+		return chapterTagDao.queryForId(id);
+	}
+
+	/**
+	 * Create or update content tag dao
+	 * 
+	 * @param dao - content tag dao to create or update.
+	 * @throws SQLException
+	 */
+	public void setChapterTag(ChapterTag dao) throws SQLException {
+		chapterTagDao.createOrUpdate(dao);
 	}
 
 	/**

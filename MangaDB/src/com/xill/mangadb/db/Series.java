@@ -317,6 +317,15 @@ public class Series {
 			builder.append(",");
 			builder.append("\"pageCount\":");
 			builder.append(StringUtil.toValidJsonValue(chapter.getPages().size()+""));
+			builder.append(",");
+			builder.append("\"tags\":");
+			builder.append("[");
+			List<ChapterTag> tagList = new ArrayList<ChapterTag>(chapter.getTags());
+			for(int f = 0; f < tagList.size(); ++f) {
+				if(f > 0) builder.append(",");
+				builder.append(StringUtil.toValidJsonValue(tagList.get(f).getName()+""));
+			}
+			builder.append("]");
 			builder.append("}");
 		}
 		builder.append("],");
