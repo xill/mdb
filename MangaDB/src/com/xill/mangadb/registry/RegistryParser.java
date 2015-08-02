@@ -75,6 +75,11 @@ public class RegistryParser {
 					Properties prop = new Properties();
 					try {
 						prop.load(new FileReader(serieProp));
+						// read status
+						String statusTxt = (String) prop.get(Series.KEY_STATUS);
+						if(statusTxt != null && statusTxt.length() > 0) {
+							serie.setStatus(statusTxt);
+						}
 						// read tags
 						String rawTags = (String) prop.get(Series.KEY_TAGS);
 						if(rawTags != null && rawTags.length() > 0) {
@@ -203,6 +208,10 @@ public class RegistryParser {
 						pageListing = pL.toArray(new String[]{});
 						// go through pages
 						for( String pageName : pageListing ) {
+							// skip chapter properties file
+							if(pageName.equals("chapter.properties")) continue;
+							
+							// build a page object
 							String pagePath = seriesName + File.separator + chapterName + File.separator + pageName;
 							System.out.println(pagePath);
 							Page page = new Page();

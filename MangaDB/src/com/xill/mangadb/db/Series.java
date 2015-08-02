@@ -29,6 +29,8 @@ public class Series {
 	private String description = "";
 	@DatabaseField(dataType = DataType.STRING)
 	private String chapterOrder = "";
+	@DatabaseField(dataType = DataType.STRING)
+	private String status = STATUS_UNKNOWN;
 	
 	@ForeignCollectionField
 	private Collection<Chapter> chapters = new ArrayList<Chapter>();
@@ -54,6 +56,20 @@ public class Series {
 	public static final String KEY_CHAPTER_ORDER = "chapter_order";
 	public static final String KEY_NAMES = "names";
 	public static final String KEY_THUMBNAIL = "thumbnail";
+	public static final String KEY_STATUS = "status";
+	
+	public static final String STATUS_COMPLETED = "Completed";
+	public static final String STATUS_ONGOING = "Ongoing";
+	public static final String STATUS_CANCELED = "Canceled";
+	public static final String STATUS_UNKNOWN = "Unknown";
+	
+	public void setStatus(String status) {
+		this.status = status;
+	}
+	
+	public String getStatus() {
+		return this.status;
+	}
 	
 	public void setAuthor(Author author) {
 		this.author = author;
@@ -251,6 +267,7 @@ public class Series {
 			}
 		}
 		
+		p.setProperty(KEY_STATUS, status);
 		p.setProperty(KEY_CHAPTER_ORDER, this.chapterOrder);
 		p.setProperty(KEY_NAMES, getSeriesNameString());
 		if(this.thumbnail != null) p.setProperty(KEY_THUMBNAIL, this.thumbnail.getUrl());
@@ -301,6 +318,7 @@ public class Series {
 			builder.append(StringUtil.toValidJsonValue(names.get(i).getName()));
 		}
 		builder.append("],");
+		builder.append("\"status\":"+StringUtil.toValidJsonValue(status)+",");
 		if(author != null) builder.append("\"author\":"+StringUtil.toValidJsonValue(author.getName())+",");
 		if(artist != null) builder.append("\"artist\":"+StringUtil.toValidJsonValue(artist.getName())+",");
 		builder.append("\"description\":"+StringUtil.toValidJsonValue(description)+",");
