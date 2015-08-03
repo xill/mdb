@@ -12,6 +12,8 @@ var dataSet = undefined;
 var SERIES_MODE = "/api/all";
 // api command for tag data.
 var TAGS_MODE = "/api/tags";
+// api command for content tag data.
+var CONTENT_TAGS_MODE = "/api/ctags";
 
 // variable to determine which mode is used.
 var REGUEST_MODE = SERIES_MODE
@@ -19,6 +21,9 @@ var REGUEST_MODE = SERIES_MODE
 // read mode from url.
 if(gup("mode")=="tags") {
 	REGUEST_MODE = TAGS_MODE;
+}
+else if(gup("mode")=="ctags") {
+	REGUEST_MODE = CONTENT_TAGS_MODE;
 }
 
 // request to fetch full data set.
@@ -46,7 +51,7 @@ function showDirectory() {
 
 	var data = undefined;
 	// setup data for tags.
-	if(REGUEST_MODE == TAGS_MODE) {
+	if(REGUEST_MODE == TAGS_MODE || REGUEST_MODE == CONTENT_TAGS_MODE) {
 		for(var i = 0 ; i < dataSet.tags.length; ++i) {
 			nameToKey[dataSet.tags[i]] = dataSet.tags[i];
 		}
@@ -89,7 +94,7 @@ function showDirectory() {
 		grid.append(subGrid);
 		subGrid.append('<b>'+keyName+'</b><br/>');
 		for(var f = 0 ; f < keyValue.length ; ++f) {
-			if(REGUEST_MODE == TAGS_MODE) {
+			if(REGUEST_MODE == TAGS_MODE || REGUEST_MODE == CONTENT_TAGS_MODE) {
 				subGrid.append($('<div><a href="/search/?tags='+nameToKey[keyValue[f]]+'">'+keyValue[f]+' ('+dataSet.count[keyValue[f]]+')</a></div>'));
 			} else {
 				subGrid.append($('<div><a href="/chapters/?name='+nameToKey[keyValue[f]]+'">'+keyValue[f]+'</a></div>'));

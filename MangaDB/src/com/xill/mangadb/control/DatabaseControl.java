@@ -363,6 +363,10 @@ public abstract class DatabaseControl {
 	public List<Tag> getAllTags() throws SQLException {
 		return tagDao.queryForAll();
 	}
+	
+	public List<ContentTag> getAllContentTags() throws SQLException {
+		return contentTagDao.queryForAll();
+	}
 
 	/**
 	 * @param name - tag name to find.

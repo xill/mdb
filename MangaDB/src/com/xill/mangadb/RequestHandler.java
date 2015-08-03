@@ -19,6 +19,7 @@ import javax.servlet.http.HttpServletResponse;
 import com.xill.mangadb.control.DatabaseControl;
 import com.xill.mangadb.db.Author;
 import com.xill.mangadb.db.Chapter;
+import com.xill.mangadb.db.ContentTag;
 import com.xill.mangadb.db.Series;
 import com.xill.mangadb.db.SeriesName;
 import com.xill.mangadb.db.Tag;
@@ -38,6 +39,7 @@ public class RequestHandler extends HttpServlet {
 	private final static String API_GET_ALL = API_KEY + "all";
 	private final static String API_GET_SERIES = API_KEY + "series";
 	private final static String API_GET_TAGS = API_KEY + "tags";
+	private final static String API_GET_CONTENT_TAGS = API_KEY + "ctags";
 	private final static String API_GET_SEARCH = API_KEY + "search";
 
 	// reader/
@@ -70,6 +72,8 @@ public class RequestHandler extends HttpServlet {
 				handleGetSeries(request, response, requestString);
 			else if (requestString.startsWith(API_GET_TAGS))
 				handleGetTags(request, response, requestString);
+			else if (requestString.startsWith(API_GET_CONTENT_TAGS))
+				handleGetContentTags(request, response, requestString);
 			else if (requestString.startsWith(API_GET_SEARCH))
 				handleSearch(request, response);
 		}
@@ -186,15 +190,17 @@ public class RequestHandler extends HttpServlet {
 			for (int i = 0; i < seriesSet.size(); ++i) {
 				if (i > 0)
 					builder.append(",");
-				
+
 				Series serie = seriesSet.get(i);
 				builder.append("{");
-				builder.append("\"name\":\""+serie.getName()+"\",");
+				builder.append("\"name\":\"" + serie.getName() + "\",");
 				builder.append("\"names\": [");
-				List<SeriesName> sNames = new ArrayList<SeriesName>(serie.getSeriesNames());
-				for(int f = 0; f < sNames.size(); ++f ) {
-					if(f > 0) builder.append(",");
-					builder.append("\""+sNames.get(f).getName()+"\"");
+				List<SeriesName> sNames = new ArrayList<SeriesName>(
+						serie.getSeriesNames());
+				for (int f = 0; f < sNames.size(); ++f) {
+					if (f > 0)
+						builder.append(",");
+					builder.append("\"" + sNames.get(f).getName() + "\"");
 				}
 				builder.append("]");
 				builder.append("}");
@@ -205,6 +211,105 @@ public class RequestHandler extends HttpServlet {
 			response.setContentType("application/json");
 			response.setStatus(HttpServletResponse.SC_OK);
 			response.getWriter().println(builder.toString());
+		}
+	}
+
+	private void handleGetContentTags(HttpServletRequest request,
+			HttpServletResponse response, String query)
+			throws ServletException, IOException {
+
+		// for all
+		// /api/ctags
+
+		// for specific
+		// /api/ctags/Example1
+
+		// for combination
+		// /api/ctags/Example1+Example2
+		
+		String shortQuery = query.replace(API_GET_CONTENT_TAGS, "").replace("/", "")
+				.trim();
+		
+		response.setContentType("application/json");
+		response.setStatus(HttpServletResponse.SC_OK);
+		
+		// get content tag listing
+		if (shortQuery.length() == 0) {
+			List<ContentTag> tagDaos = null;
+			try {
+				tagDaos = DatabaseControl.get().getAllContentTags();
+			} catch (SQLException e) {
+				e.printStackTrace();
+			}
+
+			if (tagDaos != null) {
+				List<String> tagNames = new ArrayList<String>();
+				Map<String, Integer> tagCounts = new HashMap<String, Integer>();
+				for (ContentTag t : tagDaos) {
+					String name = t.getName();
+					Integer i = tagCounts.get(name);
+					if (i == null) {
+						tagCounts.put(name, 1);
+						tagNames.add(name);
+					} else {
+						tagCounts.put(name, i + 1);
+					}
+				}
+
+				StringBuilder builder = new StringBuilder();
+				builder.append("{");
+				builder.append("\"tags\":");
+				builder.append("[");
+				for (int i = 0; i < tagNames.size(); ++i) {
+					if (i > 0)
+						builder.append(",");
+					builder.append("\"" + tagNames.get(i) + "\"");
+				}
+				builder.append("],");
+				builder.append("\"count\":");
+				builder.append("{");
+				for (int i = 0; i < tagNames.size(); ++i) {
+					if (i > 0)
+						builder.append(",");
+					builder.append("\"" + tagNames.get(i) + "\":");
+					builder.append("\"" + tagCounts.get(tagNames.get(i)) + "\"");
+				}
+				builder.append("}");
+				builder.append("}");
+				response.getWriter().println(builder.toString());
+			} else {
+				response.getWriter().println("{}");
+			}
+
+		}
+		// get results from a tag search.
+		else {
+			String[] tags = shortQuery.split(",");
+			List<Series> s = null;
+			try {
+				s = DatabaseControl.get().getSeriesByTags(tags);
+			} catch (SQLException e) {
+				e.printStackTrace();
+			}
+			System.out.println(s);
+			if (s != null) {
+				StringBuilder builder = new StringBuilder();
+				builder.append("{");
+				builder.append("\"series\":[");
+				for (int i = 0; i < s.size(); ++i) {
+					if (i > 0)
+						builder.append(",");
+					if (s.get(i) == null)
+						System.out.println(i + " is null");
+					builder.append("\"" + s.get(i).getName() + "\"");
+				}
+				builder.append("]");
+				builder.append("}");
+				response.getWriter().println(builder.toString());
+
+			} else {
+				response.getWriter().println("{}");
+			}
 		}
 	}
 
@@ -238,15 +343,15 @@ public class RequestHandler extends HttpServlet {
 
 			if (tagDaos != null) {
 				List<String> tagNames = new ArrayList<String>();
-				Map<String,Integer> tagCounts = new HashMap<String,Integer>();
+				Map<String, Integer> tagCounts = new HashMap<String, Integer>();
 				for (Tag t : tagDaos) {
 					String name = t.getName();
 					Integer i = tagCounts.get(name);
-					if(i == null) {
+					if (i == null) {
 						tagCounts.put(name, 1);
 						tagNames.add(name);
 					} else {
-						tagCounts.put(name, i+1);
+						tagCounts.put(name, i + 1);
 					}
 				}
 
@@ -275,7 +380,7 @@ public class RequestHandler extends HttpServlet {
 				response.getWriter().println("{}");
 			}
 
-		} 
+		}
 		// get results from a tag search.
 		else {
 			String[] tags = shortQuery.split(",");
@@ -329,7 +434,7 @@ public class RequestHandler extends HttpServlet {
 
 		System.out.println("series name \"" + seriesName + "\"");
 		System.out.println("chapter number \"" + chapterNumber + "\"");
-		
+
 		// search series with name.
 		Series s = null;
 		try {
@@ -368,7 +473,8 @@ public class RequestHandler extends HttpServlet {
 	/**
 	 * remove empty string from array
 	 * 
-	 * @param strings - array of string to trim
+	 * @param strings
+	 *            - array of string to trim
 	 * @return trimmed array
 	 */
 	private String[] removeRedundant(String... strings) {
